@@ -12,6 +12,22 @@
 
 using namespace geode::prelude;
 
+// The template is just to make sure each instantiation of the function gets its own static
+template <size_t>
+static void handleLockModifierState(bool key, CCMenuItemToggler* lock) {
+    static bool stateOverwrittenViaModifier = false;
+    if (key) {
+        if (!stateOverwrittenViaModifier && lock) {
+            lock->toggle(!lock->isToggled());
+            stateOverwrittenViaModifier = true;
+        }
+    }
+    else if (stateOverwrittenViaModifier && lock) {
+        lock->toggle(!lock->isToggled());
+        stateOverwrittenViaModifier = false;
+    }
+}
+
 class ToggleSnapButton : public CCMenuItemSpriteExtra {
 protected:
     ButtonSprite* m_sprite;
@@ -242,7 +258,25 @@ class $modify(SnappableScaleControl, GJScaleControl) {
     
         menu->updateLayout();
 
+        this->schedule(schedule_selector(SnappableScaleControl::updateShiftAndControl), 0);
+
         return true;
+    }
+
+    void updateShiftAndControl(float) {
+        handleLockModifierState<0>(CCKeyboardDispatcher::get()->getShiftKeyPressed(), this->getSnapLock());
+        
+        static bool stateOverwrittenViaModifier = false;
+        if (CCKeyboardDispatcher::get()->getControlKeyPressed()) {
+            if (!stateOverwrittenViaModifier) {
+                this->onToggleLockScale(m_scaleLockButton);
+                stateOverwrittenViaModifier = true;
+            }
+        }
+        else if (stateOverwrittenViaModifier) {
+            this->onToggleLockScale(m_scaleLockButton);
+            stateOverwrittenViaModifier = false;
+        }
     }
 
     $override
@@ -433,12 +467,20 @@ class $modify(InputRotationControl, GJRotationControl) {
         menu->setPosition(110, 35);
         this->addChild(menu);
 
+        this->schedule(schedule_selector(InputRotationControl::updateShiftAndControl), 0);
+
         return true;
+    }
+
+    void updateShiftAndControl(float) {
+        handleLockModifierState<1>(CCKeyboardDispatcher::get()->getShiftKeyPressed(), this->getSnapLock());
+        handleLockModifierState<2>(CCKeyboardDispatcher::get()->getControlKeyPressed(), this->getPosLock());
     }
 
     $override
     void draw() {
         GJRotationControl::draw();
+
         // Draw large ticks every 45° and small ticks every 15°
         auto tickSize = this->getSnapSizeBtn()->getValue();
         for (float angle = 0; angle < 360; angle += tickSize) {
