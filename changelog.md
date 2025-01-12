@@ -415,7 +415,7 @@
  * Add Extra Object Info
  * Add Custom Grid Size
  * Add a popup for customizing what properties to paste on Paste State
- * Scaling objects of different scales in the editor no longer fuck up the positions
+ * Scaling objects of different scales in the editor no longer mess up the positions
 
 ## v3.1.0 (v0.31)
  * Add Global Clipboard
