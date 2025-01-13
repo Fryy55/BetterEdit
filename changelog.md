@@ -1,5 +1,8 @@
 # BetterEdit 6
 
+## v6.10.0-alpha.5
+ * Use <cj>Shift</c> and <cj>Control</c> to quickly enable Snapping on <ca>Scale</c> and <ca>Rotation</c> controls
+
 ## v6.10.0-alpha.4
  * Fix <cy>Layer Lock Button</c> sometimes being visible on All
 
