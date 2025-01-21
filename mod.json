@@ -1,5 +1,5 @@
 {
-	"geode": "4.1.0",
+	"geode": "4.2.0",
 	"version": "6.10.0-alpha.5",
 	"gd": {
 		"win": "2.2074",
@@ -15,53 +15,42 @@
 		"source": "https://github.com/HJfod/BetterEdit",
 		"community": "https://discord.gg/UGHDfzQtpz"
 	},
-	"dependencies": [
-        {
-            "id": "geode.node-ids",
-            "version": "1.13.0",
-            "importance": "required" 
-        },
-		{
-			"id": "geode.custom-keybinds",
+	"dependencies": {
+        "geode.node-ids": "1.13.0",
+		"geode.custom-keybinds": {
 			"version": "1.7.1",
-			"importance": "required"
+			"importance": "required",
+			"platforms": ["win"]
 		},
-		{
-			"id": "hjfod.gmd-api",
+		"hjfod.gmd-api": {
 			"version": "1.2.1",
 			"importance": "required"
 		},
-		{
-			"id": "cvolton.level-id-api",
+		"cvolton.level-id-api": {
 			"version": "1.0.0",
 			"importance": "required"
 		},
-		{
-			"id": "hjfod.trashcan",
+		"hjfod.trashcan": {
 			"version": "1.0.0",
 			"importance": "recommended"
 		},
-		{
-			"id": "hjfod.backups",
+		"hjfod.backups": {
 			"version": "1.0.0",
 			"importance": "suggested"
 		},
-		{
-			"id": "alphalaneous.awesome_modifier_icons",
+		"alphalaneous.awesome_modifier_icons": {
 			"version": "1.0.3",
 			"importance": "suggested"
 		},
-		{
-			"id": "alphalaneous.improvedlink",
+		"alphalaneous.improvedlink": {
 			"version": "1.0.5",
 			"importance": "suggested"
 		},
-		{
-			"id": "alphalaneous.improved_group_view",
+		"alphalaneous.improved_group_view": {
 			"version": "1.0.5",
 			"importance": "suggested"
 		}
-    ],
+	},
 	"resources": {
 		"files": [
 			"scripts/*.swipe"
