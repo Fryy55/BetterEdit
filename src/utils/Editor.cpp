@@ -140,7 +140,7 @@ class $modify(EditorPauseLayer) {
             auto spr = typeinfo_cast<CCRGBAProtocol*>(btn->getNormalImage());
             spr->setCascadeColorEnabled(true);
             spr->setCascadeOpacityEnabled(true);
-            spr->setColor({ 90, 90, 90 });
+            spr->setColor(ccc3(90, 90, 90));
             spr->setOpacity(200);
         }
     }
