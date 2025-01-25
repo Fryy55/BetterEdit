@@ -53,7 +53,7 @@
 	},
 	"resources": {
 		"files": [
-			"scripts/*.swipe"
+			"scripts/*.js"
 		],
 		"spritesheets": {
 			"UISheet": [

@@ -58,6 +58,8 @@ add_subdirectory($ENV{GEODE_SDK} ${CMAKE_CURRENT_BINARY_DIR}/geode SYSTEM)
 
 setup_geode_mod(${PROJECT_NAME})
 
+include(pro/CPMPackages.cmake)
+
 target_compile_definitions(${PROJECT_NAME} PUBLIC "BETTEREDIT_VERSION_STR=${MOD_VERSION}")
 
 # Bad code will NOT be deployed!
