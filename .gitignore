@@ -3,6 +3,5 @@
 build/
 build-*/
 pro/
-pro/scripting-old/
 resources/images/support-popup.png
 swipe-vscode/

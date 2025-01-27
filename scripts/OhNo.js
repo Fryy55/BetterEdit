@@ -4,7 +4,7 @@
  * @version 1.0
  */
 
-print("hi this is javascript code in gd");
-print([] + [], {}, "helloooo", 5);
+console.log("hi this is javascript code in gd");
+console.log([] + [], {}, "helloooo", 5);
 
 "hi"
