@@ -1,13 +1,12 @@
+// @ts-check
 
-function deselectRandom(objs) {
-    for (obj of objs) {
-        if (Math.random() > 0.5) {
-            obj.deselect();
-        }
-    }
-}
+/// @name Log on select
+/// @by HJfod
+/// @worker
 
 // This is just an idea
 editor.addEventListener("select", objs => {
-    deselectRandom(objs);
+    for (const obj of objs) {
+        print(`Selected ${obj}`);
+    }
 });
