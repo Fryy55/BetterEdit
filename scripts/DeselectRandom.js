@@ -3,6 +3,8 @@
 /// @name Deselect random
 /// @by HJfod
 
+editor.moveObjectsBy([], ["hi", "ho"]);
+
 const objs = editor.getSelectedObjects();
 print(`Selected objects: ${objs.length}`);
 let count = 0;
