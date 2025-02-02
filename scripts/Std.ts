@@ -1,9 +1,4 @@
 
-declare interface Metadata {
-    name: string,
-    by: string,
-}
-
 declare interface EditorEventListeners {
     "select": (objs: GameObject[]) => void,
 }
@@ -38,7 +33,12 @@ declare class GameObject {
      * select/deselect the object
      */
     selected: boolean;
+    /**
+     * The current rotation of the object, in degrees
+     */
+    rotation: number;
 }
+
 /**
  * Interface for interacting with the level editor
  */
@@ -60,6 +60,10 @@ declare class Editor {
      * @param id The ID of the object to create. See [Colon's level](https://gdbrowser.com/99784974) for a list of all object IDs
      */
     createObject(id: number): GameObject;
+    /**
+     * Get the current center of the screen
+     */
+    getViewCenter(): { x: number, y: number };
 
     addEventListener<K extends keyof EditorEventListeners>(event: K, onEvent: EditorEventListeners[K]): void;
 }
@@ -67,8 +71,21 @@ declare class Editor {
  * Interface for interacting with the level editor, such as getting selected objects or creating new ones
  */
 declare const editor: Editor;
+
 /**
  * Output messages to the script run window
  * @param msgs Message(s) to output
  */
 declare function print(...msgs: any[]): void;
+
+declare interface InputTypes {
+    "int": number,
+    "number": number,
+    "string": string,
+}
+declare interface InputItem {
+    type: keyof InputTypes,
+    name: string,
+    description?: string,
+}
+declare function input<T extends Record<string, InputItem>>(inputs: T): Promise<{ [Property in keyof T]: InputTypes[T[Property]["type"]] }>;

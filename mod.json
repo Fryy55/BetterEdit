@@ -53,7 +53,8 @@
 	},
 	"resources": {
 		"files": [
-			"scripts/*.js"
+			"scripts/*.js",
+			"scripts/*.mjs"
 		],
 		"spritesheets": {
 			"UISheet": [

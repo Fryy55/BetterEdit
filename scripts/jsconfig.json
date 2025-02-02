@@ -1,7 +1,8 @@
 {
     "compilerOptions": {
-        "target": "ES5",
-        "lib": ["ES5"],
+        "target": "ES2022",
+        "lib": ["ES2022"],
+        "module": "ES2022",
         "allowJs": true,
         "strict": true,
         "noUncheckedIndexedAccess": true,
