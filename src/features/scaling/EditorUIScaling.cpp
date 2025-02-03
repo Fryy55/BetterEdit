@@ -23,21 +23,21 @@ class $modify(BetterEditButtonBar, EditButtonBar) {
     };
 
     $override
-    void loadFromItems(CCArray* items, int c, int r, bool customObjects) {
+    void loadFromItems(CCArray* items, int c, int r, bool persist) {
 
-        EditButtonBar::loadFromItems(items, c, r, customObjects);
+        EditButtonBar::loadFromItems(items, c, r, persist);
 
         // do not update if no change is made to prevent lag
-        if (m_fields->m_cols == c && m_fields->m_rows == r && !customObjects) return;
+        if (m_fields->m_cols == c && m_fields->m_rows == r && !persist) return;
 
         m_fields->m_cols = c;
         m_fields->m_rows = r;
-        updateUI();
+        updateUI(persist);
     }
 
-    void updateUI() {
+    void updateUI(bool persist) {
         
-        EditButtonBar::loadFromItems(m_buttonArray, m_fields->m_cols, m_fields->m_rows, false);
+        EditButtonBar::loadFromItems(m_buttonArray, m_fields->m_cols, m_fields->m_rows, persist);
         if (auto ui = typeinfo_cast<EditorUI*>(getParent())) {
             // fix visible pages when opening editor, can be assumed as 0 as loadFromItems resets the page to 0
             for (auto barPages : CCArrayExt<CCNode*>(m_pagesArray)) {
@@ -249,7 +249,7 @@ class $modify(ScaledUI, EditorUI) {
         // Reload EditButtonBars to recenter
         for (auto c : CCArrayExt<CCNode*>(this->getChildren())) {
             if (auto bar = typeinfo_cast<EditButtonBar*>(c)) {
-                static_cast<BetterEditButtonBar*>(bar)->updateUI();
+                static_cast<BetterEditButtonBar*>(bar)->updateUI(true);
             }
         }
 
