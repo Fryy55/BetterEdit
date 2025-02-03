@@ -3,6 +3,10 @@ declare interface EditorEventListeners {
     "select": (objs: GameObject[]) => void,
 }
 
+declare type Point = { x: number, y: number };
+
+declare function point(x: number, y: number): Point;
+
 /**
  * Represents an object in the editor
  */
@@ -51,10 +55,10 @@ declare class Editor {
      * Move the specified objects by the specified amount of units relative to 
      * their current position
      * @param objs Objects to move
-     * @param amount Amount to move relative to the objects' current position, 
-     * in (X, Y) coordinates
+     * @param by Amount to move relative to the objects' current position, in 
+     * (X, Y) coordinates
      */
-    moveObjectsBy(objs: GameObject[], amount: [number, number]): void;
+    moveObjectsBy(objs: GameObject[], by: Point): void;
     /**
      * Create a new object in the editor. The object is placed at (0, 0) (the bottom left starting corner)
      * @param id The ID of the object to create. See [Colon's level](https://gdbrowser.com/99784974) for a list of all object IDs
@@ -63,7 +67,7 @@ declare class Editor {
     /**
      * Get the current center of the screen
      */
-    getViewCenter(): { x: number, y: number };
+    getViewCenter(): Point;
 
     addEventListener<K extends keyof EditorEventListeners>(event: K, onEvent: EditorEventListeners[K]): void;
 }
