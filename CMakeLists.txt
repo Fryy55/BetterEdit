@@ -76,5 +76,7 @@ else()
 		-Wno-gnu-statement-expression-from-macro-expansion
 		# Style "IDC"s
 		-Wno-extra-semi
+		# QuickJS
+		-Wno-format-nonliteral
 	)
 endif()

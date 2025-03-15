@@ -11,6 +11,7 @@
 bool SupportPopup::setup(bool showDontShowAgain) {
     m_bgSprite->setVisible(false);
 
+    // @geode-ignore(unknown-resource)
     auto bg = CCSprite::create("support-popup.png"_spr);
     m_mainLayer->addChildAtPosition(bg, Anchor::Center);
 
