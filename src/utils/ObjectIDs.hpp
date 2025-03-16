@@ -56,4 +56,61 @@ namespace object_ids {
     static constexpr int INSTANT_COLLISION_TRIGGER = 3609;
     static constexpr int ON_DEATH_TRIGGER = 1812;
     static constexpr int PLAYER_CONTROL_TRIGGER = 1932;
+
+    static constexpr bool isTriggerID(int id) {
+        switch (id) {
+            case MOVE_TRIGGER: return true;
+            case STOP_TRIGGER: return true;
+            case PULSE_TRIGGER: return true;
+            case ALPHA_TRIGGER: return true;
+            case TOGGLE_TRIGGER: return true;
+            case SPAWN_TRIGGER: return true;
+            case ROTATE_TRIGGER: return true;
+            case SCALE_TRIGGER: return true;
+            case FOLLOW_TRIGGER: return true;
+            case ANIMATE_TRIGGER: return true;
+            case FOLLOW_PLAYER_Y_TRIGGER: return true;
+            case ADVANCED_FOLLOW_TRIGGER: return true;
+            case EDIT_ADVANCED_FOLLOW_TRIGGER: return true;
+            case RE_TARGET_ADVANCED_FOLLOW_TRIGGER: return true;
+            case AREA_MOVE_TRIGGER: return true;
+            case AREA_ROTATE_TRIGGER: return true;
+            case AREA_SCALE_TRIGGER: return true;
+            case AREA_FADE_TRIGGER: return true;
+            case AREA_TINT_TRIGGER: return true;
+            case EDIT_AREA_MOVE_TRIGGER: return true;
+            case EDIT_AREA_ROTATE_TRIGGER: return true;
+            case EDIT_AREA_SCALE_TRIGGER: return true;
+            case EDIT_AREA_FADE_TRIGGER: return true;
+            case EDIT_AREA_TINT_TRIGGER: return true;
+            case CHANGE_BG_TRIGGER: return true;
+            case CHANGE_GROUND_TRIGGER: return true;
+            case CHANGE_MIDGROUND_TRIGGER: return true;
+            case TOUCH_TRIGGER: return true;
+            case COUNT_TRIGGER: return true;
+            case INSTANT_COUNT_TRIGGER: return true;
+            case PICKUP_TRIGGER: return true;
+            case RANDOM_TRIGGER: return true;
+            case ADVANCED_RANDOM_TRIGGER: return true;
+            case SEQUENCE_TRIGGER: return true;
+            case SPAWN_PARTICLE_TRIGGER: return true;
+            case RESET_TRIGGER: return true;
+            case CAMERA_ZOOM_TRIGGER: return true;
+            case CAMERA_STATIC_TRIGGER: return true;
+            case CAMERA_OFFSET_TRIGGER: return true;
+            case CAMERA_GP_OFFSET_TRIGGER: return true;
+            case CAMERA_ROTATE_TRIGGER: return true;
+            case CAMERA_EDGE_TRIGGER: return true;
+            case CAMERA_MODE_TRIGGER: return true;
+            case COLLISION_TRIGGER: return true;
+            case TIME_WARP_TRIGGER: return true;
+            case MIDGROUND_SETUP_TRIGGER: return true;
+            case BG_SPEED_TRIGGER: return true;
+            case MIDGROUND_SPEED_TRIGGER: return true;
+            case INSTANT_COLLISION_TRIGGER: return true;
+            case ON_DEATH_TRIGGER: return true;
+            case PLAYER_CONTROL_TRIGGER: return true;
+            default: return false;
+        }
+    }
 }
