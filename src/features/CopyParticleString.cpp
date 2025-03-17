@@ -14,7 +14,7 @@ class $modify(CopyParticleStringPopup, CreateParticlePopup) {
         if (!CreateParticlePopup::init(obj, objs, str))
             return false;
         
-        if (!Mod::get()->template getSettingValue<bool>("dev-mode")) {
+        if (!Mod::get()->template getSavedValue<bool>("developer-mode")) {
             return true;
         }
         

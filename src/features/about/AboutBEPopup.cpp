@@ -192,6 +192,14 @@ bool AboutBEPopup::setup() {
     optionsBtn->setID("settings"_spr);
     m_buttonMenu->addChildAtPosition(optionsBtn, Anchor::TopRight, ccp(-3, -3));
 
+    auto devModeSpr = CCSprite::createWithSpriteFrameName("GJ_starBtnMod_001.png");
+    devModeSpr->setVisible(Mod::get()->template getSavedValue<bool>("developer-mode"));
+    auto devModeBtn = CCMenuItemSpriteExtra::create(
+        devModeSpr, this, menu_selector(AboutBEPopup::onDevMode)
+    );
+    devModeBtn->setID("dev-mode"_spr);
+    m_buttonMenu->addChildAtPosition(devModeBtn, Anchor::BottomRight, ccp(-3, 3));
+
     return true;
 }
 
@@ -246,15 +254,41 @@ void AboutBEPopup::onReportBug(CCObject*) {
 void AboutBEPopup::onChangelog(CCObject*) {
     ChangelogPopup::create()->show();
 }
-
 void AboutBEPopup::onSettings(CCObject*) {
     openSettingsPopup(Mod::get());
 }
-
+void AboutBEPopup::onDevMode(CCObject*) {
+    if (Mod::get()->template getSavedValue<bool>("developer-mode")) {
+        createQuickPopup(
+            "Disable Developer Mode",
+            "Are you sure you want to <cy>disable developer mode</c>?",
+            "Cancel", "Disable",
+            [](auto, bool btn2) {
+                if (btn2) {
+                    Mod::get()->setSavedValue("developer-mode", false);
+                }
+            }
+        );
+    }
+    else {
+        createQuickPopup(
+            "Enable Developer Mode",
+            "Are you sure you want to <cg>enable developer mode</c>?\n"
+            "<cr>WARNING:</c> Developer mode gives access to features that may be "
+            "<co>unstable</c> and <co>unfinished</c>. <cr>The game may crash</c>; "
+            "be sure to take regular backups of your levels!",
+            "Cancel", "Enable",
+            [](auto, bool btn2) {
+                if (btn2) {
+                    Mod::get()->setSavedValue("developer-mode", true);
+                }
+            }
+        );
+    }
+}
 void AboutBEPopup::onSpecialThanks(CCObject*) {
     SpecialThanksPopup::create()->show();
 }
-
 void AboutBEPopup::onDevLink(CCObject* sender) {
     auto link = static_cast<CCString*>(static_cast<CCNode*>(sender)->getUserObject())->getCString();
     web::openLinkInBrowser(link);

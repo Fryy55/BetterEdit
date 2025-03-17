@@ -186,12 +186,6 @@
 			"name": "Copy & Paste to Clipboard",
 			"description": "Copy & paste objects to/from system clipboard. This means that when you copy objects, you can paste it in a text editor in its text representation, and also paste it in to the editor later"
 		},
-		"dev-mode": {
-			"type": "bool",
-			"default": false,
-			"name": "Developer Mode",
-			"description": "Enables some features intended for Developers"
-		},
 		"pro-section": {
 			"type": "title",
 			"name": "Supporter Settings",
@@ -203,12 +197,6 @@
 			"default": "Selected Only",
 			"name": "Trigger Indicators: Dynamic Colors",
 			"description": "Control whether <cj>Trigger Indicators</c> should be colored based on the trigger, or if they should just be white"
-		},
-		"trigger-indicators-color-objects": {
-			"type": "bool",
-			"default": false,
-			"name": "Trigger Indicators: Color Selection",
-			"description": "Control whether <cj>Trigger Indicators</c> should also color the target objects, or only point to them via the line"
 		},
 		"trigger-indicators-blocky": {
 			"type": "bool",
@@ -224,26 +212,34 @@
 		"run-script-button": {
 			"type": "bool",
 			"default": false,
-			"name": "Run Script Button (WIP)",
-			"description": "<cr>THIS FEATURE IS HEAVILY WIP</c>",
-			"enable-if": "dev-mode",
+			"name": "??? WIP #1",
+			"description": "Coming soon!",
+			"enable-if": "saved:developer-mode",
 			"enable-if-description": "This Feature is Heavily WIP!"
 		},
-		"better-select": {
+		"better-warp-tools": {
 			"type": "bool",
 			"default": false,
-			"name": "Better Warp Selection (WIP)",
-			"description": "<cr>THIS FEATURE IS HEAVILY WIP</c>",
-			"enable-if": "saved:has-pro && dev-mode",
+			"name": "??? WIP #2",
+			"description": "Coming soon!",
+			"enable-if": "saved:has-pro && saved:developer-mode",
 			"enable-if-description": "This Feature is Supporter-Only & Heavily WIP!"
 		},
-		"enable-pro-ui": {
+		"pro-ui": {
 			"type": "bool",
 			"default": false,
-			"name": "Enable Pro UI",
-			"description": "Give the Editor a <cy>New Look</c>! <cr>THIS FEATURE IS HEAVILY WIP</c>",
-			"enable-if": "saved:has-pro && dev-mode",
+			"name": "??? WIP #3",
+			"description": "Coming soon!",
+			"enable-if": "saved:has-pro && saved:developer-mode",
 			"enable-if-description": "This Feature is Supporter-Only & Heavily WIP!"
+		},
+		"trigger-previews": {
+			"type": "bool",
+			"default": false,
+			"name": "??? WIP #4",
+			"description": "Coming soon!",
+			"enable-if": "saved:has-pro && saved:developer-mode",
+			"enable-if-description": "This Feature is Heavily WIP!"
 		}
 	},
 	"tags": ["editor", "enhancement", "utility", "customization"]

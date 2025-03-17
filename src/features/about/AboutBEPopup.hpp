@@ -14,6 +14,7 @@ public:
 
     void onClose(CCObject* sender) override;
     void onSettings(CCObject*);
+    void onDevMode(CCObject*);
     void onReportBug(CCObject*);
     void onSuggestFeature(CCObject*);
     void onSupport(CCObject*);
