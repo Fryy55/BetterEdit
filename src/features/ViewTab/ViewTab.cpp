@@ -101,7 +101,7 @@ struct $modify(ViewTabUI, EditorUI) {
     ButtonSprite* createViewToggleSpr(const char* frame, bool selected) {
         auto top = CCSprite::createWithSpriteFrameName(frame);
         return ButtonSprite::create(
-            top, 50, 0, 50, 1, true, (selected ? "GJ_button_02.png" : "GJ_button_01.png"), true
+            top, 50, 0, 50, .8f, true, (selected ? "GJ_button_02.png" : "GJ_button_01.png"), true
         );
     }
     CCMenuItemToggler* createViewToggle(const char* frame, auto get, auto set) {
@@ -216,22 +216,22 @@ struct $modify(ViewTabUI, EditorUI) {
         // to make due with this :/
 
         btns->addObject(this->createViewToggle(
-            "v_rotate.png"_spr,
+            "v-rotation.png"_spr,
             [] { return GameManager::get()->getGameVariable("0118"); },
             [this](bool) {
                 fakeEditorPauseLayer(m_editorLayer)->togglePreviewAnim(nullptr);
             }
         ));
-        btns->addObject(this->createViewToggleGV("v_particles.png"_spr, "0117", [this](bool) {
+        btns->addObject(this->createViewToggleGV("v-particles.png"_spr, "0117", [this](bool) {
             m_editorLayer->updatePreviewParticles();
         }));
-        btns->addObject(this->createViewToggleGV("v_shaders.png"_spr, "0158"));
-        btns->addObject(this->createViewToggleMSV("v_ldm.png"_spr, "hide-ldm", false, [this](bool) {
+        btns->addObject(this->createViewToggleGV("v-shaders.png"_spr, "0158"));
+        btns->addObject(this->createViewToggleMSV("v-ldm.png"_spr, "hide-ldm", false, [this](bool) {
             for (auto obj : CCArrayExt<GameObjectExtra*>(m_editorLayer->m_objects)) {
                 obj->updateVisibility();
             }
         }));
-        btns->addObject(this->createViewToggleGV("v_prevmode.png"_spr, "0036", [this](bool) {
+        btns->addObject(this->createViewToggleGV("v-preview-mode.png"_spr, "0036", [this](bool) {
             // Let's not be funny and ruin everyone's levels
             if (m_editorLayer->m_playbackMode != PlaybackMode::Not) {
                 // Why was this being called separately? `onStopPlaytest` already calls it
@@ -241,42 +241,69 @@ struct $modify(ViewTabUI, EditorUI) {
             m_editorLayer->updateEditorMode();
         }));
         btns->addObject(this->createViewToggle(
-            "v_bpm_line.png"_spr,
+            "v-bpm-lines.png"_spr,
             [] { return GameManager::get()->m_showSongMarkers; },
             [](bool enable) {
                 GameManager::get()->m_showSongMarkers = enable;
             }
         ));
-        btns->addObject(this->createViewToggleMSV("v_pos_line.png"_spr, "pos-line"));
-        btns->addObject(this->createViewToggleGV("v_dur_line.png"_spr, "0058"));
-        btns->addObject(this->createViewToggleGV("v_eff_line.png"_spr, "0043"));
-        
+        btns->addObject(this->createViewToggleMSV("v-position-line.png"_spr, "pos-line"));
+        btns->addObject(this->createViewToggleGV("v-duration-lines.png"_spr, "0058"));
+        btns->addObject(this->createViewToggleGV("v-effect-lines.png"_spr, "0043"));
+        btns->addObject(this->createViewToggleGV("v-ground.png"_spr, "0037", [this](bool enable) {
+            m_editorLayer->m_groundLayer->setVisible(enable);
+        }));
+        btns->addObject(this->createViewToggleGV("v-grid.png"_spr, "0038"));
+        btns->addObject(this->createViewToggleMSV("v-dash-lines.png"_spr, "show-dash-lines"));
+
     #ifdef BETTEREDIT_PRO
-        auto indAllToggle = this->createViewToggleMSV("v_indicators_all.png"_spr, "show-all-trigger-indicators");
+        auto ttt = this->createViewToggleMSV(
+            "v-indicators-trigger-to-trigger.png"_spr,
+            "trigger-indicators-trigger-to-trigger"
+        );
+        auto clusterOutlines = this->createViewToggleMSV(
+            "v-indicators-cluster-outline.png"_spr,
+            "trigger-indicators-cluster-outlines"
+        );
+        // todo: show this one as disabled if there are too many objects
+        auto showAll = this->createViewToggleMSV(
+            "v-indicators-all.png"_spr,
+            "trigger-indicators-show-all", HAS_PRO(),
+            [clusterOutlines](bool enabled) {
+                be::enableToggle(clusterOutlines, enabled);
+            }
+        );
+        auto blocky = this->createViewToggleMSV(
+            "v-indicators-blocky.png"_spr,
+            "trigger-indicators-blocky"
+        );
+        std::array<CCMenuItemToggler*, 4> indToggles { ttt, showAll, clusterOutlines, blocky };
         auto indToggle = this->createViewToggleMSV(
-            "v_indicators.png"_spr, "show-trigger-indicators", HAS_PRO(),
-            [indAllToggle](bool enabled) {
-                be::enableToggle(indAllToggle, enabled);
+            "v-indicators.png"_spr, "show-trigger-indicators", HAS_PRO(),
+            [indToggles, clusterOutlines, showAll](bool enabled) {
+                for (auto toggle : indToggles) {
+                    be::enableToggle(toggle, enabled);
+                }
+                // todo: come up with some more robust system for this
+                be::enableToggle(clusterOutlines, showAll->isToggled());
             }
         );
         btns->addObject(indToggle);
-        btns->addObject(indAllToggle);
+        for (auto toggle : indToggles) {
+            btns->addObject(toggle);
+        }
 
         if (!HAS_PRO()) {
             be::enableToggle(indToggle, false, true);
-            be::enableToggle(indAllToggle, false, true);
             indToggle->setUserObject(CCString::create("<cj>Trigger Indicators</c>"));
             indToggle->setTarget(this, menu_selector(ViewTabUI::onProOnlyFeature));
-            indAllToggle->setUserObject(CCString::create("<cj>Trigger Indicators</c>"));
-            indAllToggle->setTarget(this, menu_selector(ViewTabUI::onProOnlyFeature));
+            for (auto toggle : indToggles) {
+                be::enableToggle(toggle, false, true);
+                toggle->setUserObject(CCString::create("<cj>Trigger Indicators</c>"));
+                toggle->setTarget(this, menu_selector(ViewTabUI::onProOnlyFeature));
+            }
         }
     #endif
-
-        btns->addObject(this->createViewToggleGV("v_ground.png"_spr, "0037", [this](bool enable) {
-            m_editorLayer->m_groundLayer->setVisible(enable);
-        }));
-        btns->addObject(this->createViewToggleGV("v_grid.png"_spr, "0038"));
-        btns->addObject(this->createViewToggleMSV("v_dash.png"_spr, "show-dash-lines"));
 
         auto buttonBar = EditButtonBar::create(
             btns,

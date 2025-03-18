@@ -198,12 +198,6 @@
 			"name": "Trigger Indicators: Dynamic Colors",
 			"description": "Control whether <cj>Trigger Indicators</c> should be colored based on the trigger, or if they should just be white"
 		},
-		"trigger-indicators-blocky": {
-			"type": "bool",
-			"default": true,
-			"name": "Trigger Indicators: Blocky Lines",
-			"description": "Control whether <cj>Trigger Indicators</c> should draw a direct line to the target objects, or a blocky line that only takes 90-degree turns"
-		},
 		"wip-section": {
 			"type": "title",
 			"name": "WIP Features",
