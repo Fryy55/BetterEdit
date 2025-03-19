@@ -1,5 +1,10 @@
 # BetterEdit 6
 
+## v6.10.0-alpha.6
+ * <cj>Trigger Indicators</c> now do clustering, drawing only one line to target objects if there are several close to each other
+ * More <cj>Trigger Indicator</c> options: only draw connections between triggers or targets, draw arrowheads at the ends of lines, and control line opacity & thickness
+ * Enabling <ca>Developer Mode</c> is now a little bit harder because people kept enabling WIP features and crashing their game as a result :(
+
 ## v6.10.0-alpha.5
  * Use <cj>Shift</c> and <cj>Control</c> to quickly enable Snapping on <ca>Scale</c> and <ca>Rotation</c> controls
  * MacOS support!
