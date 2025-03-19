@@ -198,6 +198,38 @@
 			"name": "Trigger Indicators: Dynamic Colors",
 			"description": "Control whether <cj>Trigger Indicators</c> should be colored based on the trigger, or if they should just be white"
 		},
+		"trigger-indicator-thickness": {
+			"type": "float",
+			"default": 2,
+			"min": 1,
+			"max": 10,
+			"control": {
+				"slider": true,
+				"slider-step": 0.1
+			},
+			"name": "Trigger Indicators: Line Thickness",
+			"description": "Control the width of the <cj>Trigger Indicators</c> lines"
+		},
+		"trigger-indicator-opacity": {
+			"type": "float",
+			"default": 1,
+			"min": 0,
+			"max": 1,
+			"control": {
+				"slider": true,
+				"slider-step": 0.1,
+				"arrows": false,
+				"big-arrows": false
+			},
+			"name": "Trigger Indicators: Line Opacity",
+			"description": "Control the opacity of the <cj>Trigger Indicators</c> lines"
+		},
+		"trigger-indicator-tickheads": {
+			"type": "bool",
+			"default": false,
+			"name": "Trigger Indicators: Arrow Heads",
+			"description": "If true, <cj>Trigger Indicators</c> have arrowheads at the end"
+		},
 		"wip-section": {
 			"type": "title",
 			"name": "WIP Features",
