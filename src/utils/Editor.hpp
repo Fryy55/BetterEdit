@@ -33,6 +33,8 @@ namespace be {
 
     void enableButton(CCMenuItemSpriteExtra* btn, bool enabled, bool visualOnly = false);
     void enableToggle(CCMenuItemToggler* toggle, bool enabled, bool visualOnly = false);
+
+    CCArray* getObjectsFromGroupDict(CCDictionary* groupDict, int groupID);
 }
 
 //// More EditCommand options

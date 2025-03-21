@@ -273,3 +273,16 @@ void be::enableToggle(CCMenuItemToggler* toggle, bool enabled, bool visualOnly) 
     be::enableButton(toggle->m_onButton, enabled, visualOnly);
     be::enableButton(toggle->m_offButton, enabled, visualOnly);
 }
+
+CCArray* be::getObjectsFromGroupDict(CCDictionary* groupDict, int id) {
+    // Don't waste time on invalid triggers
+    if (id <= 0 || id > 9999) {
+        return nullptr;
+    }
+    auto objs = static_cast<CCArray*>(groupDict->objectForKey(id));
+    // Don't waste time on null or empty array
+    if (!objs || !objs->count()) {
+        return nullptr;
+    }
+    return objs;
+}
