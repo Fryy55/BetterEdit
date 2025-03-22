@@ -1,10 +1,12 @@
 #include "Editor.hpp"
+#include "ObjectIDs.hpp"
 #include <Geode/modify/GameManager.hpp>
 #include <Geode/modify/EditorUI.hpp>
 #include <Geode/modify/EditorPauseLayer.hpp>
 #include <Geode/modify/LevelEditorLayer.hpp>
 #include <Geode/binding/EditButtonBar.hpp>
 #include <Geode/binding/GameObject.hpp>
+#include <Geode/binding/EffectGameObject.hpp>
 #include <Geode/binding/CCTextInputNode.hpp>
 #include <utils/Warn.hpp>
 
@@ -285,4 +287,76 @@ CCArray* be::getObjectsFromGroupDict(CCDictionary* groupDict, int id) {
         return nullptr;
     }
     return objs;
+}
+static CCPoint doCalculateSlotPosition(
+    EffectGameObject* trigger,
+    size_t slotCount, size_t slotIndex,
+    float sideMultiplier
+) {
+    constexpr float TRIGGER_NAME_SPACE_OFFSET = 5;
+    return trigger->getPosition() + ccp(
+        10 * trigger->getScaleX() * sideMultiplier,
+        ((slotIndex - static_cast<float>(slotCount - 1) / 2.f) * -10 - TRIGGER_NAME_SPACE_OFFSET) *
+            trigger->getScaleY()
+    );
+}
+CCPoint be::InputSlots::calculateSlotPosition(EffectGameObject* trigger, size_t slotIndex) const {
+    const size_t slotCount = (targetGroupID.has_value());
+    return doCalculateSlotPosition(trigger, slotCount, slotIndex, -1);
+}
+CCPoint be::OutputSlots::calculateSlotPosition(EffectGameObject* trigger, size_t slotIndex) const {
+    const size_t slotCount = (targetGroupID.has_value() + centerGroupID.has_value());
+    return doCalculateSlotPosition(trigger, slotCount, slotIndex, 1);
+}
+
+std::pair<be::InputSlots, be::OutputSlots> be::getTriggerSlots(EffectGameObject* trigger) {
+    using namespace object_ids;
+    switch (trigger->m_objectID) {
+        case ROTATE_TRIGGER: {
+            return std::make_pair(
+                InputSlots {
+                    .targetGroupID = SlotType::Generic,
+                },
+                OutputSlots {
+                    .targetGroupID = SlotType::Transform,
+                    .centerGroupID = SlotType::Center,
+                }
+            );
+        } break;
+
+        case MOVE_TRIGGER: {
+            return std::make_pair(
+                be::InputSlots {
+                    .targetGroupID = SlotType::Generic,
+                },
+                be::OutputSlots {
+                    .targetGroupID = SlotType::Transform,
+                    .centerGroupID = std::nullopt,
+                }
+            );
+        } break;
+
+        default: {
+            return std::make_pair(
+                be::InputSlots {
+                    .targetGroupID = SlotType::Generic,
+                },
+                be::OutputSlots {
+                    .targetGroupID = SlotType::Generic,
+                    .centerGroupID = SlotType::Generic,
+                }
+            );
+        } break;
+    }
+}
+std::vector<int> be::getTriggerTargetedGroups(EffectGameObject* trigger) {
+    auto [_, slots] = getTriggerSlots(trigger);
+    std::vector<int> results;
+    if (slots.targetGroupID) {
+        results.push_back(trigger->m_targetGroupID);
+    }
+    if (slots.centerGroupID) {
+        results.push_back(trigger->m_centerGroupID);
+    }
+    return results;
 }

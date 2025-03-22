@@ -35,6 +35,26 @@ namespace be {
     void enableToggle(CCMenuItemToggler* toggle, bool enabled, bool visualOnly = false);
 
     CCArray* getObjectsFromGroupDict(CCDictionary* groupDict, int groupID);
+
+    enum class SlotType : uint8_t {
+        Generic,
+        Spawn,
+        Center,
+        Transform,
+    };
+    struct InputSlots final {
+        std::optional<SlotType> targetGroupID;
+
+        CCPoint calculateSlotPosition(EffectGameObject* trigger, size_t slotIndex) const;
+    };
+    struct OutputSlots final {
+        std::optional<SlotType> targetGroupID;
+        std::optional<SlotType> centerGroupID;
+
+        CCPoint calculateSlotPosition(EffectGameObject* trigger, size_t slotIndex) const;
+    };
+    std::pair<InputSlots, OutputSlots> getTriggerSlots(EffectGameObject* trigger);
+    std::vector<int> getTriggerTargetedGroups(EffectGameObject* trigger);
 }
 
 //// More EditCommand options
