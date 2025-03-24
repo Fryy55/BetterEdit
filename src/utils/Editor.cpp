@@ -130,6 +130,20 @@ class $modify(EditorUI) {
             m_tabsMenu->setVisible(false);
         }
     }
+
+    #ifdef GEODE_IS_MACOS // toggleMode is inlined into onPlaytest on macOS
+    $override
+    void onPlaytest(CCObject* sender) {
+        auto playbackMode = m_editorLayer->m_playbackMode;
+        EditorUI::onPlaytest(sender);
+        if (!m_isPaused && playbackMode != PlaybackMode::Playing && be::isViewOnlyEditor(m_editorLayer)) {
+            m_editButtonBar->setVisible(false);
+            m_createButtonBar->setVisible(false);
+            m_deleteMenu->setVisible(false);
+            m_tabsMenu->setVisible(false);
+        }
+    }
+    #endif
 };
 class $modify(EditorPauseLayer) {
     static void onModify(auto& self) {

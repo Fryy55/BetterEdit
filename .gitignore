@@ -5,3 +5,4 @@ build-*/
 pro/
 resources/images/support-popup.png
 swipe-vscode/
+.cache/
