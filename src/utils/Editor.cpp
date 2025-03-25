@@ -276,6 +276,65 @@ void be::enableToggle(CCMenuItemToggler* toggle, bool enabled, bool visualOnly) 
     be::enableButton(toggle->m_offButton, enabled, visualOnly);
 }
 
+static CCRect calculateCoverageButActuallyGood(CCArray* nodes) {
+    if (nodes->count() == 0) {
+        return CCRectZero;
+    }
+    auto result = static_cast<CCNode*>(nodes->firstObject())->boundingBox();
+    for (auto node : CCArrayExt<CCNode*>(nodes)) {
+        auto rect = node->boundingBox();
+        const auto diffMinX = rect.getMinX() - result.getMinX();
+        if (diffMinX < 0.f) {
+            result.origin.x += diffMinX;
+            result.size.width -= diffMinX;
+        }
+        const auto diffMinY = rect.getMinY() - result.getMinY();
+        if (diffMinY < 0.f) {
+            result.origin.y += diffMinY;
+            result.size.height -= diffMinY;
+        }
+        result.size.width += std::max(0.f, rect.getMaxX() - result.getMaxX());
+        result.size.height += std::max(0.f, rect.getMaxY() - result.getMaxY());
+    }
+    return result;
+}
+
+void be::focusEditor(EditorUI* ui, CCRect const& rect, bool smooth) {
+    constexpr int MAGIC_ACTION_TAG = 2348234;
+
+    // todo: all code like this will have to be reworked when i add editor rotation...
+
+    // also i have no clue why these calculations work, 
+    // i figured this out through trial and error
+
+    const auto objLayer = ui->m_editorLayer->m_objectLayer;
+    const auto winSize = CCDirector::get()->getWinSize();
+    const auto viewPortToFitTo = winSize / 3;
+    const auto scale = clamp(
+        std::min(viewPortToFitTo.width / rect.size.width, viewPortToFitTo.height / rect.size.height),
+        .25f, 1.5f
+    );
+    const auto pos = (-ccp(rect.getMidX(), rect.getMidY()) + winSize / 2 / scale) * scale;
+
+    if (smooth) {
+        objLayer->stopActionByTag(MAGIC_ACTION_TAG);
+        auto action = CCEaseInOut::create(CCSpawn::create(
+            CCMoveTo::create(.4f, pos),
+            CCScaleTo::create(.4f, scale),
+            nullptr
+        ), 2);
+        action->setTag(MAGIC_ACTION_TAG);
+        objLayer->runAction(action);
+    }
+    else {
+        objLayer->setPosition(pos);
+        objLayer->setScale(scale);
+    }
+}
+void be::focusEditorOnObjects(EditorUI* ui, CCArray* objs, bool smooth) {
+    return focusEditor(ui, calculateCoverageButActuallyGood(objs), smooth);
+}
+
 CCArray* be::getObjectsFromGroupDict(CCDictionary* groupDict, int id) {
     // Don't waste time on invalid triggers
     if (id <= 0 || id > 9999) {
