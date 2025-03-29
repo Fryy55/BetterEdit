@@ -371,18 +371,6 @@ CCPoint be::OutputSlots::calculateSlotPosition(EffectGameObject* trigger, size_t
 std::pair<be::InputSlots, be::OutputSlots> be::getTriggerSlots(EffectGameObject* trigger) {
     using namespace object_ids;
     switch (trigger->m_objectID) {
-        case ROTATE_TRIGGER: {
-            return std::make_pair(
-                InputSlots {
-                    .targetGroupID = SlotType::Generic,
-                },
-                OutputSlots {
-                    .targetGroupID = SlotType::Transform,
-                    .centerGroupID = SlotType::Center,
-                }
-            );
-        } break;
-
         case MOVE_TRIGGER: {
             return std::make_pair(
                 be::InputSlots {
@@ -391,6 +379,18 @@ std::pair<be::InputSlots, be::OutputSlots> be::getTriggerSlots(EffectGameObject*
                 be::OutputSlots {
                     .targetGroupID = SlotType::Transform,
                     .centerGroupID = std::nullopt,
+                }
+            );
+        } break;
+
+        case ROTATE_TRIGGER: {
+            return std::make_pair(
+                InputSlots {
+                    .targetGroupID = SlotType::Generic,
+                },
+                OutputSlots {
+                    .targetGroupID = SlotType::Transform,
+                    .centerGroupID = SlotType::Center,
                 }
             );
         } break;
