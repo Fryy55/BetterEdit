@@ -34,6 +34,9 @@ namespace be {
     void enableButton(CCMenuItemSpriteExtra* btn, bool enabled, bool visualOnly = false);
     void enableToggle(CCMenuItemToggler* toggle, bool enabled, bool visualOnly = false);
 
+    void focusEditor(EditorUI* ui, CCRect const& rect, bool smooth);
+    void focusEditorOnObjects(EditorUI* ui, CCArray* objs, bool smooth);
+
     CCArray* getObjectsFromGroupDict(CCDictionary* groupDict, int groupID);
 
     enum class SlotType : uint8_t {

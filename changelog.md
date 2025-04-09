@@ -1,5 +1,8 @@
 # BetterEdit 6
 
+## v6.10.0-alpha.7
+ * <co>Group Summary</c> is back!
+
 ## v6.10.0-alpha.6
  * <cj>Trigger Indicators</c> now do clustering, drawing only one line to target objects if there are several close to each other
  * More <cj>Trigger Indicator</c> options: only draw connections between triggers or targets, draw arrowheads at the ends of lines, and control line opacity & thickness

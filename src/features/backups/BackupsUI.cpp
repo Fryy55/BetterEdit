@@ -11,7 +11,7 @@ class $modify(BackupLevelLayer, EditLevelLayer) {
         
         if (auto menu = this->getChildByID("folder-menu")) {
             auto backupsSpr = CircleButtonSprite::createWithSpriteFrameName(
-                "backups.png"_spr, 1.f, CircleBaseColor::Green
+                "backups.png"_spr, .9f, CircleBaseColor::Green
             );
             backupsSpr->setScale(.8f);
             auto backupsBtn = CCMenuItemSpriteExtra::create(
