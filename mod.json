@@ -4,7 +4,8 @@
 	"gd": {
 		"win": "2.2074",
 		"mac": "2.2074",
-		"android": "2.2074"
+		"android": "2.2074",
+		"ios": "2.2074"
 	},
 	"id": "hjfod.betteredit",
 	"name": "BetterEdit",
@@ -20,7 +21,7 @@
 		"geode.custom-keybinds": {
 			"version": "1.7.1",
 			"importance": "required",
-			"platforms": ["win", "macos"]
+			"platforms": ["win", "mac"]
 		},
 		"hjfod.gmd-api": {
 			"version": "1.2.1",
