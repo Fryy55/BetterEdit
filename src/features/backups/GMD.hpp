@@ -3,6 +3,7 @@
 #include <Geode/binding/GJGameLevel.hpp>
 #include <Geode/binding/GJLevelList.hpp>
 #include <Geode/binding/MusicDownloadManager.hpp>
+#include <Geode/cocos/support/base64.h>
 #include <Geode/utils/cocos.hpp>
 #include <Geode/utils/file.hpp>
 #include <Geode/utils/JsonValidation.hpp>
@@ -177,7 +178,7 @@ namespace gmd {
 
                             GEODE_UNWRAP_INTO(
                                 auto songNumber, geode::utils::numFromString<int>(songFile.substr(0, songFile.find_first_of(".")))
-                                    .mapErr([songFile](std::string err) { return fmt::format("Song file name '{}' is invalid!", songFile); })
+                                    .mapErr([songFile](std::string) { return fmt::format("Song file name '{}' is invalid!", songFile); })
                             );
 
                             GEODE_UNWRAP_INTO(
@@ -311,10 +312,10 @@ namespace gmd {
             level->m_isEditable = true;
             level->m_levelType = GJLevelType::Editor;
 
-        #ifdef GEODE_IS_WINDOWS
             // old gdshare double base64 encoded the description,
             // so we decode it again
             if (isOldFile && level->m_levelDesc.size()) {
+        #ifdef GEODE_IS_WINDOWS
                 unsigned char* out = nullptr;
                 // we really should add some base64 utils, this is nasty
                 auto size = cocos2d::base64Decode(
@@ -327,8 +328,8 @@ namespace gmd {
                     free(out);
                     level->m_levelDesc = newDesc;
                 }
-            }
         #endif
+            }
 
             return geode::Ok(level);
         }
