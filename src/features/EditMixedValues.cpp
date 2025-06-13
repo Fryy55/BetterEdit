@@ -253,7 +253,7 @@ public:
         if (this->isMixed()) {
             auto minmax = this->getMinMax();
             m_input->setEnabled(false);
-            m_input->getInputNode()->m_placeholderLabel->setOpacity(255);
+            m_input->getInputNode()->m_textLabel->setOpacity(255);
             m_input->defocus();
             m_unmixBtn->setVisible(true);
             m_input->setString(fmt::format("{}..{}", minmax.min, minmax.max));
