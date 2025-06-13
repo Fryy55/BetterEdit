@@ -406,13 +406,15 @@ struct $modify(ViewTabUI, EditorUI) {
         EditorUI::selectObjects(objs, ignoreFilters);
     }
 
-    void onProOnlyFeature(CCObject* sender) {
     #ifdef BETTEREDIT_PRO
+    void onProOnlyFeature(CCObject* sender) {
         pro::showProOnlyFeaturePopup(
             static_cast<CCString*>(static_cast<CCNode*>(sender)->getUserObject())->getCString()
         );
-    #endif
     }
+    #else
+    void onProOnlyFeature(CCObject*) {}
+    #endif
 };
 
 class $modify(DrawGridLayer) {
