@@ -5,7 +5,7 @@
 #include <Geode/binding/LocalLevelManager.hpp>
 #include <Geode/binding/FLAlertLayer.hpp>
 #include <cvolton.level-id-api/include/EditorIDs.hpp>
-#include "GMD.hpp"
+#include <hjfod.gmd-api/include/GMD.hpp>
 #include <utils/HolyUB.hpp>
 #include <utils/Editor.hpp>
 
