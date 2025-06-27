@@ -1,5 +1,8 @@
 # BetterEdit 6
 
+## v6.10.0-alpha.8
+ * Fix being able to zoom out infinitely in the editor on Android
+
 ## v6.10.0-alpha.7
  * <co>Group Summary</c> is back!
 

@@ -14,7 +14,7 @@ class $modify(EditorOptionsLayer) {
     void onButtonsPerRow(CCObject* sender) {
         if (0) EditorOptionsLayer::onButtonsPerRow(sender);
 
-        m_buttonsPerRow = clamp(m_buttonsPerRow + (sender->getTag() ? 1 : -1), 6, 128);
+        m_buttonsPerRow = std::clamp(m_buttonsPerRow + (sender->getTag() ? 1 : -1), 6, 128);
         m_buttonsPerRowLabel->setString(std::to_string(m_buttonsPerRow).c_str());
     }
 };

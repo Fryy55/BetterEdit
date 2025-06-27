@@ -3,7 +3,7 @@
 #include <Geode/ui/MDTextArea.hpp>
 
 static std::string parseChangelog(std::optional<VersionInfo> const& since) {
-    auto changelog = Mod::get()->getMetadata().getChangelog().value_or(std::string());
+    auto changelog = Mod::get()->getMetadataRef().getChangelog().value_or(std::string());
     auto res = std::string();
 
     bool validHeader = false;

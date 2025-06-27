@@ -1,6 +1,5 @@
 #include "AboutBEPopup.hpp"
 #include "ChangelogPopup.hpp"
-#include "SupportPopup.hpp"
 #include <Geode/ui/GeodeUI.hpp>
 #include <Geode/ui/MDTextArea.hpp>
 #include <Geode/binding/ButtonSprite.hpp>
@@ -9,6 +8,7 @@
 
 #ifdef BETTEREDIT_PRO
 #include <pro/features/supporters/SupportersPopup.hpp>
+#include <pro/features/supporters/ActivateLicensePopup.hpp>
 #endif
 
 struct Dev {
@@ -208,8 +208,25 @@ void AboutBEPopup::onClose(CCObject* sender) {
 }
 
 void AboutBEPopup::onSupport(CCObject*) {
-    SupportPopup::create(false)->show();
-    // openSupportPopup(Mod::get());
+#ifdef BETTEREDIT_PRO
+    createQuickPopup(
+        "Support BetterEdit",
+        "The <cp>Supporter Perks</c> for BetterEdit are <co>about to be "
+        "discontinued</c> as my financial situation has gotten better and "
+        "<cj>I don't want to paywall features</c>. If you still want to support the mod "
+        "and donate a thank you, feel free to do so, but be aware that the only "
+        "perk I can offer is your name in the Supporters List!",
+        "OK", "Activate Existing License",
+        380,
+        [](auto, bool btn2) {
+            if (btn2) {
+                ActivateLicensePopup::tryShowIfLoggedIn();
+            }
+        }
+    );
+#else
+    openSupportPopup(Mod::get());
+#endif
 }
 void AboutBEPopup::onSupporters(CCObject*) {
 #ifdef BETTEREDIT_PRO

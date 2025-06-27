@@ -65,7 +65,8 @@ class $modify(EditorUI) {
             auto distNow = firstLoc.getDistance(secondLoc);
             
             auto const mult = m_fields->m_initialDistance / distNow;
-            auto zoom = std::max(m_fields->m_initialScale / mult, 0.1f);
+            // zoom limit
+            auto zoom = std::clamp(m_fields->m_initialScale / mult, .1f, 10000000.f);
             // safety measure, nan zoom can really mess up gd
             if (std::isnan(zoom) || std::isinf(zoom)) {
                 this->updateZoom(1.f);
