@@ -1,6 +1,7 @@
 # BetterEdit 6
 
 ## v6.10.0-alpha.8
+ * Add <cp>Playtest Pause/Resume</c> keybind
  * Fix being able to zoom out infinitely in the editor on Android
 
 ## v6.10.0-alpha.7
