@@ -366,6 +366,7 @@ class $modify(SnappableScaleControl, GJScaleControl) {
     }
 
     void updateInput(TextInput* input) {
+        if (!input) return;
         CCLabelBMFont* label;
         Slider* slider;
         const char* text;
