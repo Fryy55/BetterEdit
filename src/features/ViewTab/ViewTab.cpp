@@ -10,6 +10,7 @@
 #include <Geode/binding/GameManager.hpp>
 #include <Geode/binding/GJGroundLayer.hpp>
 #include <Geode/utils/cocos.hpp>
+#include <utils/BEMenuItemToggler.hpp>
 #include <utils/Editor.hpp>
 #include <utils/HolyUB.hpp>
 #include <features/supporters/Pro.hpp>
@@ -20,65 +21,6 @@ using namespace keybinds;
 #endif
 
 using namespace geode::prelude;
-
-// EditButtonBar expects CCMenuItemSpriteExtra, CCMenuItemToggler crashes the game
-class BEMenuItemToggler : public CCMenuItemSpriteExtra {
-protected:
-    std::function<bool()> m_getter;
-    std::function<void(bool)> m_setter;
-    CCNode* m_offNode = nullptr;
-    CCNode* m_onNode = nullptr;
-    bool m_toggled = false;
-
-public:
-    static BEMenuItemToggler* create(CCNode* offNode, CCNode* onNode, auto getter, auto setter) {
-        auto ret = new BEMenuItemToggler();
-        if (ret && ret->init(offNode, onNode, getter, setter)) {
-            ret->autorelease();
-            return ret;
-        }
-        CC_SAFE_DELETE(ret);
-        return nullptr;
-    }
-
-    bool init(CCNode* offNode, CCNode* onNode, auto getter, auto setter) {
-        if (!CCMenuItemSpriteExtra::init(offNode, nullptr, nullptr, nullptr)) {
-            return false;
-        }
-
-        m_offNode = offNode;
-        m_offNode->retain();
-        m_onNode = onNode;
-        m_onNode->retain();
-        m_getter = getter;
-        m_setter = setter;
-
-        return true;
-    }
-
-    void toggle() {
-        this->toggle(m_getter());
-    }
-    void toggle(bool toggled) {
-        m_toggled = toggled;
-        this->setNormalImage(toggled ? m_onNode : m_offNode);
-        this->updateSprite();
-    }
-    bool isToggled() const {
-        return m_toggled;
-    }
-
-    void activate() override {
-        toggle(!m_toggled);
-        m_setter(m_toggled);
-        CCMenuItemSpriteExtra::activate();
-    }
-
-    ~BEMenuItemToggler() {
-        CC_SAFE_RELEASE(m_offNode);
-        CC_SAFE_RELEASE(m_onNode);
-    }
-};
 
 class $modify(GameObjectExtra, GameObject) {
     void updateVisibility() {
@@ -296,7 +238,7 @@ struct $modify(ViewTabUI, EditorUI) {
             "v-indicators-all.png"_spr,
             "trigger-indicators-show-all", HAS_PRO(),
             [clusterOutlines](bool enabled) {
-                be::enableToggle(clusterOutlines, enabled);
+                be::enableButton(clusterOutlines, enabled);
             }
         );
         auto blocky = this->createViewToggleMSV(
@@ -308,10 +250,10 @@ struct $modify(ViewTabUI, EditorUI) {
             "v-indicators.png"_spr, "show-trigger-indicators", HAS_PRO(),
             [indToggles, clusterOutlines, showAll](bool enabled) {
                 for (auto toggle : indToggles) {
-                    be::enableToggle(toggle, enabled);
+                    be::enableButton(toggle, enabled);
                 }
                 // todo: come up with some more robust system for this
-                be::enableToggle(clusterOutlines, showAll->isToggled());
+                be::enableButton(clusterOutlines, showAll->isToggled());
             }
         );
         btns->addObject(indToggle);
@@ -320,14 +262,14 @@ struct $modify(ViewTabUI, EditorUI) {
         }
 
         if (!HAS_PRO()) {
-            be::enableToggle(indToggle, false, true);
+            be::enableButton(indToggle, false, true);
             indToggle->setUserObject(CCString::create("<cj>Trigger Indicators</c>"));
             indToggle->setTarget(this, menu_selector(ViewTabUI::onProOnlyFeature));
-            indToggle->m_notClickable = true;
+            indToggle->setEnabled(false);
             
             for (auto toggle : indToggles) {
-                be::enableToggle(toggle, false, true);
-                toggle->m_notClickable = true;
+                be::enableButton(toggle, false, true);
+                toggle->setEnabled(false);
                 toggle->setUserObject(CCString::create("<cj>Trigger Indicators</c>"));
                 toggle->setTarget(this, menu_selector(ViewTabUI::onProOnlyFeature));
             }

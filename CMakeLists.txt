@@ -38,9 +38,6 @@ add_library(${PROJECT_NAME} SHARED ${SOURCES})
 
 target_include_directories(${PROJECT_NAME} PUBLIC "src")
 
-# todo: doesn't Geode have net_libs now?
-include(openssl/OpenSSL.cmake)
-
 if (NOT DEFINED ENV{GEODE_SDK})
     message(FATAL_ERROR "Unable to find Geode SDK! Please define GEODE_SDK environment variable to point to Geode")
 else()
@@ -50,6 +47,16 @@ endif()
 add_subdirectory($ENV{GEODE_SDK} ${CMAKE_CURRENT_BINARY_DIR}/geode SYSTEM)
 
 setup_geode_mod(${PROJECT_NAME})
+
+# Include net_libs for SSL
+CPMAddPackage(
+	GITHUB_REPOSITORY geode-sdk/net_libs
+	GIT_TAG 6abd76c
+	GIT_SUBMODULES "boringssl"
+	GIT_SUBMODULES_RECURSE OFF
+)
+target_include_directories(${PROJECT_NAME} PRIVATE ${net_libs_SOURCE_DIR}/boringssl/include)
+target_link_libraries(${PROJECT_NAME} ca-bundle)
 
 # Include QuickJS for scripting
 CPMAddPackage("gh:HJfod/quickjs#3073f11")

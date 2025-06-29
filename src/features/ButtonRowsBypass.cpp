@@ -7,7 +7,7 @@ class $modify(EditorOptionsLayer) {
     void onButtonRows(CCObject* sender) {
         if (0) EditorOptionsLayer::onButtonRows(sender);
         
-        m_buttonRows = clamp(m_buttonRows + (sender->getTag() ? 1 : -1), 2, 24);
+        m_buttonRows = std::clamp(m_buttonRows + (sender->getTag() ? 1 : -1), 2, 24);
         m_buttonRowsLabel->setString(std::to_string(m_buttonRows).c_str());
     }
     $override
