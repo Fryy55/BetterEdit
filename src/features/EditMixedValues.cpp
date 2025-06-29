@@ -143,8 +143,8 @@ protected:
 
     void onArrow(CCObject* sender) {
         for (auto obj : m_targets) {
-            auto val = clamp(
-                m_config.get(obj) + sender->getTag(),
+            auto val = std::clamp(
+                static_cast<T>(m_config.get(obj) + sender->getTag()),
                 m_config.limits.min, m_config.limits.max
             );
             m_config.set(obj, val, sender->getTag() > 0 ? Direction::Increment : Direction::Decrement);
@@ -179,7 +179,7 @@ protected:
     }
     void override(T value, bool updateLabel = true) {
         for (auto obj : m_targets) {
-            m_config.set(obj, clamp(value, m_config.limits.min, m_config.limits.max), Direction::Reset);
+            m_config.set(obj, std::clamp(value, m_config.limits.min, m_config.limits.max), Direction::Reset);
         }
         if (updateLabel) {
             this->updateLabel();

@@ -12,7 +12,7 @@
 #include <Geode/utils/cocos.hpp>
 #include <utils/Editor.hpp>
 #include <utils/HolyUB.hpp>
-#include <utils/Pro.hpp>
+#include <features/supporters/Pro.hpp>
 
 #ifdef GEODE_IS_DESKTOP
 #include <geode.custom-keybinds/include/Keybinds.hpp>
@@ -283,7 +283,6 @@ struct $modify(ViewTabUI, EditorUI) {
         btns->addObject(this->createViewToggleGV("v-grid.png"_spr, "0038"));
         btns->addObject(this->createViewToggleMSV("v-dash-lines.png"_spr, "show-dash-lines"));
 
-    #ifdef BETTEREDIT_PRO
         auto ttt = this->createViewToggleMSV(
             "v-indicators-trigger-to-trigger.png"_spr,
             "trigger-indicators-trigger-to-trigger"
@@ -304,7 +303,7 @@ struct $modify(ViewTabUI, EditorUI) {
             "v-indicators-blocky.png"_spr,
             "trigger-indicators-blocky"
         );
-        std::array<CCMenuItemToggler*, 4> indToggles { ttt, showAll, clusterOutlines, blocky };
+        std::array<BEMenuItemToggler*, 4> indToggles { ttt, showAll, clusterOutlines, blocky };
         auto indToggle = this->createViewToggleMSV(
             "v-indicators.png"_spr, "show-trigger-indicators", HAS_PRO(),
             [indToggles, clusterOutlines, showAll](bool enabled) {
@@ -324,13 +323,15 @@ struct $modify(ViewTabUI, EditorUI) {
             be::enableToggle(indToggle, false, true);
             indToggle->setUserObject(CCString::create("<cj>Trigger Indicators</c>"));
             indToggle->setTarget(this, menu_selector(ViewTabUI::onProOnlyFeature));
+            indToggle->m_notClickable = true;
+            
             for (auto toggle : indToggles) {
                 be::enableToggle(toggle, false, true);
+                toggle->m_notClickable = true;
                 toggle->setUserObject(CCString::create("<cj>Trigger Indicators</c>"));
                 toggle->setTarget(this, menu_selector(ViewTabUI::onProOnlyFeature));
             }
         }
-    #endif
 
         auto buttonBar = EditButtonBar::create(
             btns,
@@ -406,15 +407,11 @@ struct $modify(ViewTabUI, EditorUI) {
         EditorUI::selectObjects(objs, ignoreFilters);
     }
 
-    #ifdef BETTEREDIT_PRO
     void onProOnlyFeature(CCObject* sender) {
         pro::showProOnlyFeaturePopup(
             static_cast<CCString*>(static_cast<CCNode*>(sender)->getUserObject())->getCString()
         );
     }
-    #else
-    void onProOnlyFeature(CCObject*) {}
-    #endif
 };
 
 class $modify(DrawGridLayer) {

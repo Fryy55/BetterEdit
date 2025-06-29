@@ -41,7 +41,7 @@ class $modify(EditorUI) {
                 std::log(std::max(zoom, .001f)) - y * .01f
             ));
             // zoom limit
-            zoom = clamp(zoom, .1f, 10000000.f);
+            zoom = std::clamp(zoom, .1f, 10000000.f);
 
             if (Mod::get()->getSettingValue<bool>("mouse-move-on-zoom")) {
                 auto mousePos = getMousePos();

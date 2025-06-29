@@ -324,7 +324,7 @@ void be::focusEditor(EditorUI* ui, CCRect const& rect, bool smooth) {
     const auto objLayer = ui->m_editorLayer->m_objectLayer;
     const auto winSize = CCDirector::get()->getWinSize();
     const auto viewPortToFitTo = winSize / 3;
-    const auto scale = clamp(
+    const auto scale = std::clamp(
         std::min(viewPortToFitTo.width / rect.size.width, viewPortToFitTo.height / rect.size.height),
         .25f, 1.5f
     );

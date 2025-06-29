@@ -11,6 +11,7 @@
 #include <utils/Editor.hpp>
 #include <utils/HolyUB.hpp>
 #include "GridScaling.hpp"
+#include <features/GroupSummaryPopup.hpp>
 
 using namespace geode::prelude;
 using namespace keybinds;
@@ -97,6 +98,13 @@ struct $modify(EditorUI) {
             fakeEditorPauseLayer(m_editorLayer)->saveLevel();
             Notification::create("Level saved", NotificationIcon::Success)->show();
         });
+        this->defineKeybind("pause-resume-playtest"_spr, [this]() {
+            // LevelEditorLayer::onPausePlaytest is inlined at least on Windows 
+            // but this does the job better probably anyway sooo
+            if (m_editorLayer->m_playbackMode != PlaybackMode::Not) {
+                this->onPlaytest(nullptr);
+            }
+        });
 
         this->defineKeybind("build-helper"_spr, [this]() {
             fakeEditorPauseLayer(m_editorLayer)->onBuildHelper(nullptr);
@@ -169,6 +177,10 @@ struct $modify(EditorUI) {
             this->moveObjectCall(EditCommand::BigDown);
         });
 
+        this->defineKeybind("group-summary"_spr, [this] {
+            GroupSummaryPopup::create(this)->show();
+        });
+
         return true;
     }
 
@@ -228,6 +240,14 @@ $execute {
         "",
         {},
         Category::EDITOR_MODIFY,
+        false
+    ));
+    BindManager::get()->registerBindable(BindableAction(
+        "pause-resume-playtest"_spr,
+        "Pause/Resume Playtest",
+        "Pauses or resumes the current playtest. Does not start playtesting",
+        {},
+        Category::EDITOR,
         false
     ));
     BindManager::get()->registerBindable(BindableAction(
@@ -382,6 +402,15 @@ $execute {
         Category::EDITOR_UI,
         false
     ));
+
+    BindManager::get()->registerBindable({
+        "group-summary"_spr,
+        "Open Group Summary",
+        "Opens up <co>Group Summary</c>, aka a list showing which groups are in use",
+        {},
+        Category::EDITOR, false
+    });
+
     BindManager::get()->registerBindable({
         "move-obj-half-left"_spr,
         "Move Object Half Left",

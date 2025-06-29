@@ -1,5 +1,13 @@
 # BetterEdit 6
 
+## v6.10.0-alpha.9
+ * Fix crash scaling objects pt. 2
+
+## v6.10.0-alpha.8
+ * Add <cp>Playtest Pause/Resume</c> keybind
+ * Fix being able to zoom out infinitely in the editor on Android
+ * Fix crash scaling objects on Android
+
 ## v6.10.0-alpha.7
  * <co>Group Summary</c> is back!
 

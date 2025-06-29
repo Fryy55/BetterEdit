@@ -52,7 +52,7 @@ protected:
         }
         m_input->setCallback([](auto str) {
             if (auto value = numFromString<ValueType>(str)) {
-                s_value = clamp(value.unwrap(), Source::MIN_VALUE, Source::MAX_VALUE);
+                s_value = std::clamp(value.unwrap(), Source::MIN_VALUE, Source::MAX_VALUE);
             }
             else {
                 s_value = Source::MIN_VALUE;
