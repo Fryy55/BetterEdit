@@ -320,16 +320,26 @@ class $modify(SnappableScaleControl, GJScaleControl) {
 
     $override
     void ccTouchMoved(CCTouch* touch, CCEvent* event) {
-        // Call original without the delegate so it doesn't fire an unnecessary 
-        // angleChanged event
+        auto inputX = this->getInputX();
+        auto inputY = this->getInputY();
+        auto inputXY = this->getInputXY();
+
+        // On some platforms, for some reason, the inputs may not have been 
+        // created, in which case just abort mission and let vanilla handle
+        if (!inputX || !inputY || !inputXY) {
+            return GJScaleControl::ccTouchMoved(touch, event);
+        }
+
+        // Call original without the delegate so it doesn't fire unnecessary 
+        // scaleXChanged / etc. events
         auto delegate = m_delegate;
         m_delegate = nullptr;
         GJScaleControl::ccTouchMoved(touch, event);
         m_delegate = delegate;
 
-        this->getInputX()->defocus();
-        this->getInputY()->defocus();
-        this->getInputXY()->defocus();
+        inputX->defocus();
+        inputY->defocus();
+        inputXY->defocus();
 
         auto scaleX = this->scaleFromValue(m_sliderX->getThumb()->getValue());
         auto scaleY = this->scaleFromValue(m_sliderY->getThumb()->getValue());
@@ -344,12 +354,12 @@ class $modify(SnappableScaleControl, GJScaleControl) {
         if (m_scaleButtonType == 0) {
             m_delegate->scaleXChanged(scaleX, m_scaleLocked);
             m_sliderX->setValue(this->valueFromScale(scaleX));
-            this->getInputX()->setString(numToString(scaleX, 3));
+            inputX->setString(numToString(scaleX, 3));
         }
         else if (m_scaleButtonType == 1) {
             m_delegate->scaleYChanged(scaleY, m_scaleLocked);
             m_sliderY->setValue(this->valueFromScale(scaleY));
-            this->getInputY()->setString(numToString(scaleY, 3));
+            inputY->setString(numToString(scaleY, 3));
         }
         else {
             float scale = scaleX;
@@ -361,7 +371,7 @@ class $modify(SnappableScaleControl, GJScaleControl) {
                 m_delegate->scaleXYChanged(scaleX, scaleX * ratio, m_scaleLocked);
             }
             m_sliderXY->setValue(this->valueFromScale(scale));
-            this->getInputXY()->setString(numToString(scale, 3));
+            inputXY->setString(numToString(scale, 3));
         }
     }
 

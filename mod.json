@@ -1,6 +1,6 @@
 {
 	"geode": "4.6.1",
-	"version": "6.10.0-alpha.7",
+	"version": "6.10.0-alpha.9",
 	"gd": {
 		"win": "2.2074",
 		"mac": "2.2074",
@@ -189,19 +189,20 @@
 		"pro-section": {
 			"type": "title",
 			"name": "Supporter Settings",
-			"description": "These settings are for features currently only available to <cp>Supporters</c>. Support BetterEdit to get access!"
+			"description": "These settings are for features currently only available to <cp>Supporters</c>, but will be made free in the next major update!"
 		},
 		"group-summary": {
 			"type": "bool",
 			"default": true,
 			"name": "Group Summary Button",
 			"description": "Show a button for opening <co>Group Summary</c> in the editor toolbar. You can alternatively set a keybind for opening <co>Group Summary</c>.",
-			"enable-if": "saved:has-pro"
+			"enable-if": "saved:has-pro",
+			"enable-if-description": "This feature is Supporter-only, but will be free soon!"
 		},
 		"trigger-indicator-section": {
 			"type": "title",
 			"name": "Trigger Indicators",
-			"description": "<cj>Trigger Indicators</c> draw lines between triggers and their target objects. This feauture is currently only available to <cp>Supporters</c>. Support BetterEdit to get access!"
+			"description": "<cj>Trigger Indicators</c> draw lines between triggers and their target objects. This feauture is currently only available to <cp>Supporters</c>, but will be made free in the next update!"
 		},
 		"trigger-indicator-colors": {
 			"type": "string",
@@ -209,7 +210,8 @@
 			"default": "Selected Only",
 			"name": "Trigger Indicators: Dynamic Colors",
 			"description": "Control whether <cj>Trigger Indicators</c> should be colored based on the trigger, or if they should just be white",
-			"enable-if": "saved:has-pro"
+			"enable-if": "saved:has-pro",
+			"enable-if-description": "This feature is Supporter-only, but will be free soon!"
 		},
 		"trigger-indicator-thickness": {
 			"type": "float",
@@ -222,7 +224,8 @@
 			},
 			"name": "Trigger Indicators: Line Thickness",
 			"description": "Control the width of the <cj>Trigger Indicators</c> lines",
-			"enable-if": "saved:has-pro"
+			"enable-if": "saved:has-pro",
+			"enable-if-description": "This feature is Supporter-only, but will be free soon!"
 		},
 		"trigger-indicator-opacity": {
 			"type": "float",
@@ -237,14 +240,16 @@
 			},
 			"name": "Trigger Indicators: Line Opacity",
 			"description": "Control the opacity of the <cj>Trigger Indicators</c> lines",
-			"enable-if": "saved:has-pro"
+			"enable-if": "saved:has-pro",
+			"enable-if-description": "This feature is Supporter-only, but will be free soon!"
 		},
 		"trigger-indicator-tickheads": {
 			"type": "bool",
 			"default": false,
 			"name": "Trigger Indicators: Arrow Heads",
 			"description": "If true, <cj>Trigger Indicators</c> have arrowheads at the end",
-			"enable-if": "saved:has-pro"
+			"enable-if": "saved:has-pro",
+			"enable-if-description": "This feature is Supporter-only, but will be free soon!"
 		},
 		"wip-section": {
 			"type": "title",
