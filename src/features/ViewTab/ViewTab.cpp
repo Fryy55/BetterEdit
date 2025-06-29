@@ -1,9 +1,8 @@
 #include <Geode/modify/EditorUI.hpp>
-#include <Geode/modify/EditorPauseLayer.hpp>
 #include <Geode/modify/GameObject.hpp>
 #include <Geode/modify/DrawGridLayer.hpp>
 #include <Geode/modify/FMODAudioEngine.hpp>
-#include <Geode/binding/LevelEditorLayer.hpp>
+#include <Geode/modify/LevelEditorLayer.hpp>
 #include <Geode/binding/CCMenuItemSpriteExtra.hpp>
 #include <Geode/binding/ButtonSprite.hpp>
 #include <Geode/binding/EditButtonBar.hpp>
@@ -366,23 +365,10 @@ class $modify(DrawGridLayer) {
     }
 };
 
-class $modify(EditorPauseLayer) {
-    struct Fields {
-        LevelEditorLayer* m_editorLayer;
-        ~Fields() {
-            if (m_editorLayer && m_editorLayer->m_editorUI) {
-                static_cast<ViewTabUI*>(m_editorLayer->m_editorUI)->updateViewTab();
-            }
-        }
-    };
-
-    bool init(LevelEditorLayer* lel) {
-        if (!EditorPauseLayer::init(lel))
-            return false;
-
-        m_fields->m_editorLayer = lel;
-
-        return true;
+class $modify(LevelEditorLayer) {
+    void updateOptions() {
+        LevelEditorLayer::updateOptions();
+        if (m_editorUI) static_cast<ViewTabUI*>(m_editorUI)->updateViewTab();
     }
 };
 
