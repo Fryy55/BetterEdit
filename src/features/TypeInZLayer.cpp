@@ -7,7 +7,6 @@
 #include <Geode/binding/GameManager.hpp>
 #include <Geode/binding/GameObject.hpp>
 #include <utils/Editor.hpp>
-#include <utils/Pro.hpp>
 
 using namespace geode::prelude;
 
@@ -19,11 +18,6 @@ class $modify(TypeInUI, EditorUI) {
     bool init(LevelEditorLayer* lel) {
         if (!EditorUI::init(lel))
             return false;
-        
-        // todo: pro
-        // if (isProUIEnabled()) {
-        //     return true;
-        // }
         
         auto layerMenu = this->getChildByID("layer-menu");
         layerMenu->setContentSize({ 130, layerMenu->getContentSize().height });

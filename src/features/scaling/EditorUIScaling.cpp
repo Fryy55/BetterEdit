@@ -7,7 +7,6 @@
 #include <Geode/modify/EditorUI.hpp>
 #include <Geode/modify/EditButtonBar.hpp>
 #include <Geode/modify/EditorPauseLayer.hpp>
-#include <utils/Pro.hpp>
 
 using namespace geode::prelude;
 

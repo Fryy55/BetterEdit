@@ -6,13 +6,6 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
 project(BetterEdit VERSION 1.0.0)
 
-if (NOT DONT_INCLUDE_PRO AND EXISTS ${CMAKE_CURRENT_LIST_DIR}/pro/)
-	message(STATUS "Including Pro features")
-	set(BE_PRO_FOUND TRUE)
-else()
-	message(STATUS "Including only free features, no Pro")
-endif()
-
 if (NOT SKIP_INCLUDING_LARGE_RESOURCES_FOR_SHORTER_BUILD_TIMES)
 	file(COPY_FILE
 		resources/large-images/support-popup.png
@@ -29,24 +22,20 @@ file(GLOB SOURCES
 	src/features/about/*.cpp
 	src/features/backups/*.cpp
 	src/features/ViewTab/*.cpp
+	src/features/scripting/*.cpp
+	src/features/supporters/*.cpp
+	src/server/*.cpp
 	src/editor/*.cpp
 	src/utils/*.cpp
 	src/*.cpp
 )
 
-if (${BE_PRO_FOUND})
-	include(pro/ProSources.cmake)
-endif()
-
-add_library(${PROJECT_NAME} SHARED ${SOURCES} ${PRO_SOURCES})
+add_library(${PROJECT_NAME} SHARED ${SOURCES})
 
 target_include_directories(${PROJECT_NAME} PUBLIC "src")
-if (${BE_PRO_FOUND})
-	target_include_directories(${PROJECT_NAME} PUBLIC "")
-	target_compile_definitions(${PROJECT_NAME} PUBLIC BETTEREDIT_PRO)
 
-	include(pro/OpenSSL.cmake)
-endif()
+# todo: doesn't Geode have net_libs now?
+include(openssl/OpenSSL.cmake)
 
 if (NOT DEFINED ENV{GEODE_SDK})
     message(FATAL_ERROR "Unable to find Geode SDK! Please define GEODE_SDK environment variable to point to Geode")
@@ -58,9 +47,9 @@ add_subdirectory($ENV{GEODE_SDK} ${CMAKE_CURRENT_BINARY_DIR}/geode SYSTEM)
 
 setup_geode_mod(${PROJECT_NAME})
 
-include(pro/CPMPackages.cmake)
-
-target_compile_definitions(${PROJECT_NAME} PUBLIC "BETTEREDIT_VERSION_STR=${MOD_VERSION}")
+# Include QuickJS for scripting
+CPMAddPackage("gh:HJfod/quickjs#3073f11")
+target_link_libraries(${PROJECT_NAME} qjs)
 
 # Bad code will NOT be deployed!
 if(MSVC)

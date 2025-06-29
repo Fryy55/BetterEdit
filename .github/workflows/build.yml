@@ -23,8 +23,8 @@ jobs:
           os: ubuntu-latest
           target: Android64
 
-        # - name: macOS
-        #   os: macos-latest
+        - name: macOS
+          os: macos-latest
 
     name: ${{ matrix.config.name }}
     runs-on: ${{ matrix.config.os }}
@@ -32,14 +32,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Checkout Pro
-        uses: actions/checkout@v4
-        with:
-          repository: HJfod/BetterEditPro
-          path: pro
-          token: ${{ secrets.ACCESS_TOKEN }}
-          ref: v6
-        
       - name: Build the mod
         uses: geode-sdk/build-geode-mod@main
         with:

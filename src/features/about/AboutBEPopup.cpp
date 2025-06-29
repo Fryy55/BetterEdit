@@ -4,12 +4,8 @@
 #include <Geode/ui/MDTextArea.hpp>
 #include <Geode/binding/ButtonSprite.hpp>
 #include <Geode/utils/web.hpp>
-#include <utils/Pro.hpp>
-
-#ifdef BETTEREDIT_PRO
-#include <pro/features/supporters/SupportersPopup.hpp>
-#include <pro/features/supporters/ActivateLicensePopup.hpp>
-#endif
+#include <features/supporters/SupportersPopup.hpp>
+#include <features/supporters/ActivateLicensePopup.hpp>
 
 struct Dev {
     const char* name;
@@ -157,9 +153,7 @@ bool AboutBEPopup::setup() {
     menu->setLayout(RowLayout::create()->setGrowCrossAxis(true));
     m_mainLayer->addChildAtPosition(menu, Anchor::Center, ccp(0, -60));
 
-#ifdef BETTEREDIT_PRO
     pro::addAboutPopupStuff(this);
-#endif
 
     // BE links
 
@@ -208,7 +202,6 @@ void AboutBEPopup::onClose(CCObject* sender) {
 }
 
 void AboutBEPopup::onSupport(CCObject*) {
-#ifdef BETTEREDIT_PRO
     createQuickPopup(
         "Support BetterEdit",
         "The <cp>Supporter Perks</c> for BetterEdit are <co>about to be "
@@ -224,16 +217,9 @@ void AboutBEPopup::onSupport(CCObject*) {
             }
         }
     );
-#else
-    openSupportPopup(Mod::get());
-#endif
 }
 void AboutBEPopup::onSupporters(CCObject*) {
-#ifdef BETTEREDIT_PRO
     pro::SupportersPopup::create()->show();
-#else
-    FLAlertLayer::create("BE Supporters", "Coming soon ;)", "OK")->show();
-#endif
 }
 
 void AboutBEPopup::onSuggestFeature(CCObject*) {

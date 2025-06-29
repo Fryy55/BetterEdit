@@ -272,14 +272,6 @@
 			"enable-if": "saved:has-pro && saved:developer-mode",
 			"enable-if-description": "This Feature is Supporter-Only & Heavily WIP!"
 		},
-		"pro-ui": {
-			"type": "bool",
-			"default": false,
-			"name": "??? WIP #3",
-			"description": "Coming soon!",
-			"enable-if": "saved:has-pro && saved:developer-mode",
-			"enable-if-description": "This Feature is Supporter-Only & Heavily WIP!"
-		},
 		"trigger-previews": {
 			"type": "bool",
 			"default": false,

@@ -3,7 +3,6 @@
 #include <Geode/ui/BasedButtonSprite.hpp>
 #include <Geode/binding/GameToolbox.hpp>
 #include "AboutBEPopup.hpp"
-#include <utils/Pro.hpp>
 
 using namespace geode::prelude;
 

@@ -6,7 +6,6 @@
 #include <Geode/binding/LevelEditorLayer.hpp>
 #include <Geode/ui/TextInput.hpp>
 #include <utils/Editor.hpp>
-#include <utils/Pro.hpp>
 
 using namespace geode::prelude;
 
@@ -34,9 +33,6 @@ class $modify(GridUI, EditorUI) {
             return false;
         
         if (!Mod::get()->template getSettingValue<bool>("grid-size-controls")) {
-            return true;
-        }
-        if (be::isProUIEnabled()) {
             return true;
         }
  

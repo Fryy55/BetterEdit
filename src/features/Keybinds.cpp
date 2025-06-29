@@ -11,6 +11,7 @@
 #include <utils/Editor.hpp>
 #include <utils/HolyUB.hpp>
 #include "GridScaling.hpp"
+#include <features/GroupSummaryPopup.hpp>
 
 using namespace geode::prelude;
 using namespace keybinds;
@@ -174,6 +175,10 @@ struct $modify(EditorUI) {
         });
         this->defineKeybind("move-obj-big-down"_spr, [this] {
             this->moveObjectCall(EditCommand::BigDown);
+        });
+
+        this->defineKeybind("group-summary"_spr, [this] {
+            GroupSummaryPopup::create(this)->show();
         });
 
         return true;
@@ -397,6 +402,15 @@ $execute {
         Category::EDITOR_UI,
         false
     ));
+
+    BindManager::get()->registerBindable({
+        "group-summary"_spr,
+        "Open Group Summary",
+        "Opens up <co>Group Summary</c>, aka a list showing which groups are in use",
+        {},
+        Category::EDITOR, false
+    });
+
     BindManager::get()->registerBindable({
         "move-obj-half-left"_spr,
         "Move Object Half Left",

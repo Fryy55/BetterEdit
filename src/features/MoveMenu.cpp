@@ -4,7 +4,6 @@
 #include <Geode/binding/GameManager.hpp>
 #include <Geode/utils/cocos.hpp>
 #include <utils/Editor.hpp>
-#include <utils/Pro.hpp>
 
 using namespace geode::prelude;
 
@@ -185,11 +184,6 @@ public:
             return nullptr;
         }
         
-        // todo: pro
-        // if (isProUIEnabled()) {
-        //     return nullptr;
-        // }
-
         if (create) {
             auto winSize = CCDirector::get()->getWinSize();
 
