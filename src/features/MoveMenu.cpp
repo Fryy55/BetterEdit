@@ -368,6 +368,18 @@ class $modify(MoreButtonsUI, EditorUI) {
             menu->updateMenu();
         }
     }
+    #ifdef GEODE_IS_MACOS // toggleMode is inlined into onPlaytest on macOS
+    $override
+    void onPlaytest(CCObject* sender) {
+        auto playbackMode = m_editorLayer->m_playbackMode;
+        EditorUI::onPlaytest(sender);
+        if (!m_isPaused && playbackMode != PlaybackMode::Playing) {
+            if (auto menu = CustomEditMenu::get(this)) {
+                menu->updateMenu();
+            }
+        }
+    }
+    #endif
     $override
     void resetUI() {
         EditorUI::resetUI();
