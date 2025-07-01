@@ -39,7 +39,6 @@ bool pro::ssl::verify(std::string const& message, ByteVector const& messageSigna
         return false;
     }
 
-    ByteVector verifySignature = ByteVector(64);
     if (auto error = wc_SignatureVerify(
         WC_HASH_TYPE_SHA256,
         WC_SIGNATURE_TYPE_RSA_W_ENC,
