@@ -2,7 +2,7 @@
 
 // These aren't on Windows wtf...
 
-#ifdef GEODE_IS_DESKTOP
+#ifdef GEODE_IS_WINDOWS
 void cocos2d::ccArrayDoubleCapacity(ccArray *arr)
 {
 	arr->max *= 2;
