@@ -9,6 +9,8 @@
 
 using namespace geode::prelude;
 
+#ifndef GEODE_IS_ANDROID32
+
 class $modify(ObjectToolbox) {
     $override
     float gridNodeSizeForKey(int id) {
@@ -152,3 +154,5 @@ void incrementGridSize(EditorUI* ui) {
     value = *next;
     static_cast<GridUI*>(ui)->updateGridConstSize(value);
 }
+
+#endif
