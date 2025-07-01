@@ -5,6 +5,7 @@
 #include <Geode/loader/Mod.hpp>
 #include <Geode/utils/string.hpp>
 #include <Geode/utils/file.hpp>
+#include <Geode/utils/base64.hpp>
 #include <Geode/binding/GJAccountManager.hpp>
 #include "server/Server.hpp"
 #include "server/OpenSSL.hpp"
@@ -39,7 +40,6 @@ namespace pro {
         return parts[3];
     }
 
-    template <size_t Magic>
     inline size_t verifyPro() {
         if (auto key = getProKey()) {
             auto parts = string::split(*key, ":");
@@ -50,9 +50,9 @@ namespace pro {
             auto supporterID = parts[1];
             auto platform = GEODE_PLATFORM_SHORT_IDENTIFIER;
             auto salt = parts[3];
-            auto signature = ssl::decodeBase64<Magic + 20>(parts[4]).value_or(ByteVector());
+            auto signature = base64::decode(parts[4], base64::Base64Variant::Normal).unwrapOrDefault();
 
-            return ssl::verify<Magic>(
+            return ssl::verify(
                 fmt::format("{}:{}:{}:{}", gdAccountID, supporterID, platform, salt),
                 signature
             );
@@ -69,4 +69,4 @@ namespace pro {
     void showProOnlyFeaturePopup(std::string_view featureName);
 }
 
-#define HAS_PRO() (pro::verifyPro<__LINE__>() == __LINE__ + pro::ssl::MAGIC_OK)
+#define HAS_PRO() (pro::verifyPro())

@@ -151,6 +151,12 @@
 			"name": "New Color Menu",
 			"description": "Changes the object color selection menu to show more channels aswell as previews for colors and special colors"
 		},
+		"scale-rotate-input-modifier-keys": {
+			"type": "bool",
+			"default": true,
+			"name": "Enable Shift/Control on Scale Input",
+			"description": "When holding the <cp>Shift</c> key, toggles snapping in the <co>Scale</c> and <cj>Rotate</c> controls, and when holding <cp>Control</c> toggles absolute position"
+		},
 		"larger-color-menu": {
 			"type": "bool",
 			"default": {

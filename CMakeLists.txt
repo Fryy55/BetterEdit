@@ -10,15 +10,6 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
 project(BetterEdit VERSION 1.0.0)
 
-if (NOT SKIP_INCLUDING_LARGE_RESOURCES_FOR_SHORTER_BUILD_TIMES)
-	file(COPY_FILE
-		resources/large-images/support-popup.png
-		resources/images/support-popup.png
-	)
-else()
-	file(REMOVE resources/images/support-popup.png)
-endif()
-
 file(GLOB SOURCES
 	src/features/*.cpp
 	src/features/scaling/*.cpp
@@ -35,11 +26,7 @@ file(GLOB SOURCES
 )
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
-
 target_include_directories(${PROJECT_NAME} PUBLIC "src")
-
-# todo: doesn't Geode have net_libs now?
-include(openssl/OpenSSL.cmake)
 
 if (NOT DEFINED ENV{GEODE_SDK})
     message(FATAL_ERROR "Unable to find Geode SDK! Please define GEODE_SDK environment variable to point to Geode")
@@ -50,6 +37,13 @@ endif()
 add_subdirectory($ENV{GEODE_SDK} ${CMAKE_CURRENT_BINARY_DIR}/geode SYSTEM)
 
 setup_geode_mod(${PROJECT_NAME})
+# For server stuff we need some lib for RSA and rn we are using wolfSSL because 
+# dank_meme recommended it
+set(WOLFSSL_ENCKEYS ON)
+CPMAddPackage("gh:wolfSSL/wolfssl@5.8.0-stable")
+target_link_libraries(${PROJECT_NAME} wolfssl)
+target_compile_definitions(wolfssl PUBLIC WOLFSSL_PUB_PEM_TO_DER)
+target_compile_definitions(${PROJECT_NAME} PUBLIC WOLFSSL_PUB_PEM_TO_DER)
 
 # Include QuickJS for scripting
 CPMAddPackage("gh:HJfod/quickjs#3073f11")
@@ -71,5 +65,7 @@ else()
 		-Wno-extra-semi
 		# QuickJS
 		-Wno-format-nonliteral
+		# wolfSSL
+		-Wmicrosoft-static-assert
 	)
 endif()

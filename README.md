@@ -54,7 +54,8 @@ You can also contact the developer of the mod (HJfod) directly through Discord o
 
 BetterEdit's development is supported via [donations on my Ko-fi](https://ko-fi.com/hjfod)!
 
-There is also plans for making additional features for Supporters such as **Group Summary** and a **redesigned UI**, however details on that will be coming later.
+> [!NOTE]
+> Supporters used to receive exclusive features, however these features have since been made free. You may still support if you want to say thanks for my work on BetterEdit and Geode, but please be aware that this will NOT come with any exclusive features anymore!
 
 ## :balance_scale: Licensing
 

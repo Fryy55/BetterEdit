@@ -264,6 +264,9 @@ class $modify(SnappableScaleControl, GJScaleControl) {
     }
 
     void updateShiftAndControl(float) {
+        if (!Mod::get()->getSettingValue<bool>("scale-rotate-input-modifier-keys")) {
+            return;
+        }
         handleLockModifierState<0>(CCKeyboardDispatcher::get()->getShiftKeyPressed(), this->getSnapLock());
         
         static bool stateOverwrittenViaModifier = false;
@@ -484,6 +487,9 @@ class $modify(InputRotationControl, GJRotationControl) {
     }
 
     void updateShiftAndControl(float) {
+        if (!Mod::get()->getSettingValue<bool>("scale-rotate-input-modifier-keys")) {
+            return;
+        }
         handleLockModifierState<1>(CCKeyboardDispatcher::get()->getShiftKeyPressed(), this->getSnapLock());
         handleLockModifierState<2>(CCKeyboardDispatcher::get()->getControlKeyPressed(), this->getPosLock());
     }

@@ -1,7 +1,10 @@
 # BetterEdit 6
 
 ## v6.10.0-alpha.9
+ * <cg>MacOS support!</c>
+ * Add option to disable shift/control keys in <co>Scale</c> and <cj>Rotate</c> controls
  * Fix crash scaling objects pt. 2
+ * Fix build tabs sometimes disappearing
 
 ## v6.10.0-alpha.8
  * Add <cp>Playtest Pause/Resume</c> keybind
