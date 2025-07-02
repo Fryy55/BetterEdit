@@ -1,4 +1,5 @@
 #include "OpenSSL.hpp"
+#include <Geode/loader/Log.hpp>
 
 // Without this WolfSSL tries to include winsock and that's not fun :(
 #define WOLFSSL_USER_IO

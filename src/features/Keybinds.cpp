@@ -1,7 +1,7 @@
 #include <Geode/DefaultInclude.hpp>
 
 // todo: CustomKeybinds on Mac
-#ifdef GEODE_IS_WINDOWS
+#ifdef GEODE_IS_DESKTOP
 
 #include <geode.custom-keybinds/include/Keybinds.hpp>
 #include <Geode/modify/EditorUI.hpp>

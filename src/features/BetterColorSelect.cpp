@@ -69,9 +69,13 @@ class $modify(NewColorSelect, CustomizeObjectLayer) {
     struct Fields {
         // This makes sure that the first call to goToPage always actually 
         // generates the page content
+        NewColorSelect* m_layer = nullptr;
         int page = 0;
         bool modified = false;
         bool initDone = false;
+        ~Fields() {
+            if (m_layer) m_layer->saveColors();
+        }
     };
 
     static size_t getChannelsOnPage() {
@@ -244,17 +248,14 @@ class $modify(NewColorSelect, CustomizeObjectLayer) {
         this->highlightSelectedInMenu(m_mainLayer->getChildByID("recent-channels-menu"_spr), selected);
     }
 
-// todo: hooking this virtual crashes on Android? probably a TulipHook or loader issue
-#ifndef GEODE_IS_ANDROID
     $override
-    void colorSelectClosed(CCNode* target) {
+    void updateColorSprite() {
         if (!Mod::get()->template getSettingValue<bool>("new-color-menu")) {
-            return CustomizeObjectLayer::colorSelectClosed(target);
+            return CustomizeObjectLayer::updateColorSprite();
         }
-        CustomizeObjectLayer::colorSelectClosed(target);
+        CustomizeObjectLayer::updateColorSprite();
         this->updateSprites();
     }
-#endif
 
     $override
     void updateCustomColorLabels() {
@@ -356,10 +357,9 @@ class $modify(NewColorSelect, CustomizeObjectLayer) {
         m_fields->modified = true;
     }
 
-    $override
-    void onClose(CCObject* sender) {
+    void saveColors() {
         if (!Mod::get()->template getSettingValue<bool>("new-color-menu")) {
-            return CustomizeObjectLayer::onClose(sender);
+            return;
         }
         // add selected color to recent list if it's not there and it's not 0
         if (
@@ -373,7 +373,6 @@ class $modify(NewColorSelect, CustomizeObjectLayer) {
             );
             *RECENT_COLOR_IDS.begin() = m_customColorChannel;
         }
-        CustomizeObjectLayer::onClose(sender);
     }
 
     void gotoPageWithChannel(int channel) {
@@ -432,6 +431,8 @@ class $modify(NewColorSelect, CustomizeObjectLayer) {
         if (!Mod::get()->template getSettingValue<bool>("new-color-menu")) {
             return true;
         }
+
+        m_fields->m_layer = this;
 
         auto winSize = CCDirector::get()->getWinSize();
         auto largeBtns = Mod::get()->template getSettingValue<bool>("larger-color-menu");

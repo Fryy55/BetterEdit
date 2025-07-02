@@ -1,45 +1,25 @@
 #include <Geode/modify/EditorUI.hpp>
-#include <Geode/modify/EditorPauseLayer.hpp>
 #include <Geode/modify/GameObject.hpp>
 #include <Geode/modify/DrawGridLayer.hpp>
 #include <Geode/modify/FMODAudioEngine.hpp>
-#include <Geode/binding/LevelEditorLayer.hpp>
+#include <Geode/modify/LevelEditorLayer.hpp>
 #include <Geode/binding/CCMenuItemSpriteExtra.hpp>
 #include <Geode/binding/ButtonSprite.hpp>
 #include <Geode/binding/EditButtonBar.hpp>
 #include <Geode/binding/GameManager.hpp>
 #include <Geode/binding/GJGroundLayer.hpp>
 #include <Geode/utils/cocos.hpp>
+#include <utils/BEMenuItemToggler.hpp>
 #include <utils/Editor.hpp>
 #include <utils/HolyUB.hpp>
 #include <features/supporters/Pro.hpp>
 
-#ifdef GEODE_IS_WINDOWS
+#ifdef GEODE_IS_DESKTOP
 #include <geode.custom-keybinds/include/Keybinds.hpp>
 using namespace keybinds;
 #endif
 
 using namespace geode::prelude;
-
-template <class F>
-class CCFunction : public CCObject {
-protected:
-    std::function<F> m_func;
-
-public:
-    template <class F2>
-    static CCFunction* create(F2&& func) {
-        auto ret = new CCFunction();
-        ret->m_func = func;
-        ret->autorelease();
-        return ret;
-    }
-
-    template <class... Args>
-    auto invoke(Args&&... args) {
-        return m_func(std::forward<Args>(args)...);
-    }
-};
 
 class $modify(GameObjectExtra, GameObject) {
     void updateVisibility() {
@@ -104,56 +84,44 @@ struct $modify(ViewTabUI, EditorUI) {
             top, 50, 0, 50, .8f, true, (selected ? "GJ_button_02.png" : "GJ_button_01.png"), true
         );
     }
-    CCMenuItemToggler* createViewToggle(const char* frame, auto get, auto set) {
+    BEMenuItemToggler* createViewToggle(const char* frame, auto get, auto set) {
         auto off = createViewToggleSpr(frame, false);
         auto on  = createViewToggleSpr(frame, true);
-        auto toggler = CCMenuItemToggler::create(off, on, this, menu_selector(ViewTabUI::onViewToggle));
-        toggler->setUserObject("getter", CCFunction<bool()>::create(get));
-        toggler->setUserObject("setter", CCFunction<void(bool)>::create(set));
+        auto toggler = BEMenuItemToggler::create(off, on, get, set);
         return toggler;
     }
-    CCMenuItemToggler* createViewToggleGV(const char* frame, const char* gv, std::function<void(bool)> postSet = nullptr) {
+    BEMenuItemToggler* createViewToggleGV(const char* frame, const char* gv, std::function<void(bool)> postSet = nullptr) {
         auto off = createViewToggleSpr(frame, false);
         auto on  = createViewToggleSpr(frame, true);
-        auto toggler = CCMenuItemToggler::create(off, on, this, menu_selector(ViewTabUI::onViewToggle));
-        toggler->setUserObject("getter", CCFunction<bool()>::create([gv]() {
+        auto toggler = BEMenuItemToggler::create(off, on, [gv]() {
             return GameManager::get()->getGameVariable(gv);
-        }));
-        toggler->setUserObject("setter", CCFunction<void(bool)>::create([this, gv, postSet](bool enabled) {
+        }, [this, gv, postSet](bool enabled) {
             GameManager::get()->setGameVariable(gv, enabled);
             postSet ? postSet(enabled) : m_editorLayer->updateOptions();
-        }));
+        });
         return toggler;
     }
-    CCMenuItemToggler* createViewToggleMSV(
+    BEMenuItemToggler* createViewToggleMSV(
         const char* frame, const char* modSavedValue,
         bool defaultValue = false, std::function<void(bool)> postSet = nullptr
     ) {
         auto off = createViewToggleSpr(frame, false);
         auto on  = createViewToggleSpr(frame, true);
-        auto toggler = CCMenuItemToggler::create(off, on, this, menu_selector(ViewTabUI::onViewToggle));
-        toggler->setUserObject("getter", CCFunction<bool()>::create([modSavedValue, defaultValue]() {
+        auto toggler = BEMenuItemToggler::create(off, on, [modSavedValue, defaultValue]() {
             return Mod::get()->template getSavedValue<bool>(modSavedValue, defaultValue);
-        }));
-        toggler->setUserObject("setter", CCFunction<void(bool)>::create([modSavedValue, postSet](bool enabled) {
+        }, [modSavedValue, postSet](bool enabled) {
             Mod::get()->setSavedValue(modSavedValue, enabled);
             if (postSet) {
                 postSet(enabled);
             }
-        }));
+        });
         return toggler;
-    }
-    void onViewToggle(CCObject* sender) {
-        auto toggle = static_cast<CCMenuItemToggler*>(sender);
-        auto setter = static_cast<CCFunction<void(bool)>*>(toggle->getUserObject("setter"));
-        setter->invoke(!toggle->isToggled());
     }
 
     void updateViewTab() {
         if (auto bbar = static_cast<EditButtonBar*>(this->getChildByID("view-tab"_spr))) {
-            for (auto toggle : CCArrayExt<CCMenuItemToggler*>(bbar->m_buttonArray)) {
-                auto func = static_cast<CCFunction<bool()>*>(toggle->getUserObject("getter"));
-                toggle->toggle(func->invoke());
+            for (auto toggle : CCArrayExt<BEMenuItemToggler*>(bbar->m_buttonArray)) {
+                toggle->toggle();
             }
         }
     }
@@ -199,7 +167,7 @@ struct $modify(ViewTabUI, EditorUI) {
             );
         }
 
-    #ifdef GEODE_IS_WINDOWS
+    #ifdef GEODE_IS_DESKTOP
         this->template addEventListener<InvokeBindFilter>([=, this](InvokeBindEvent* event) {
             if (event->isDown() && m_editorLayer->m_playbackMode == PlaybackMode::Not) {
                 this->toggleMode(m_fields->viewModeBtn);
@@ -269,22 +237,22 @@ struct $modify(ViewTabUI, EditorUI) {
             "v-indicators-all.png"_spr,
             "trigger-indicators-show-all", HAS_PRO(),
             [clusterOutlines](bool enabled) {
-                be::enableToggle(clusterOutlines, enabled);
+                be::enableButton(clusterOutlines, enabled);
             }
         );
         auto blocky = this->createViewToggleMSV(
             "v-indicators-blocky.png"_spr,
             "trigger-indicators-blocky"
         );
-        std::array<CCMenuItemToggler*, 4> indToggles { ttt, showAll, clusterOutlines, blocky };
+        std::array<BEMenuItemToggler*, 4> indToggles { ttt, showAll, clusterOutlines, blocky };
         auto indToggle = this->createViewToggleMSV(
             "v-indicators.png"_spr, "show-trigger-indicators", HAS_PRO(),
             [indToggles, clusterOutlines, showAll](bool enabled) {
                 for (auto toggle : indToggles) {
-                    be::enableToggle(toggle, enabled);
+                    be::enableButton(toggle, enabled);
                 }
                 // todo: come up with some more robust system for this
-                be::enableToggle(clusterOutlines, showAll->isToggled());
+                be::enableButton(clusterOutlines, showAll->isToggled());
             }
         );
         btns->addObject(indToggle);
@@ -293,14 +261,14 @@ struct $modify(ViewTabUI, EditorUI) {
         }
 
         if (!HAS_PRO()) {
-            be::enableToggle(indToggle, false, true);
+            be::enableButton(indToggle, false, true);
             indToggle->setUserObject(CCString::create("<cj>Trigger Indicators</c>"));
             indToggle->setTarget(this, menu_selector(ViewTabUI::onProOnlyFeature));
-            indToggle->m_notClickable = true;
+            indToggle->setEnabled(false);
             
             for (auto toggle : indToggles) {
-                be::enableToggle(toggle, false, true);
-                toggle->m_notClickable = true;
+                be::enableButton(toggle, false, true);
+                toggle->setEnabled(false);
                 toggle->setUserObject(CCString::create("<cj>Trigger Indicators</c>"));
                 toggle->setTarget(this, menu_selector(ViewTabUI::onProOnlyFeature));
             }
@@ -342,6 +310,21 @@ struct $modify(ViewTabUI, EditorUI) {
         }
     }
 
+
+    #ifdef GEODE_IS_MACOS // toggleMode is inlined into onPlaytest on macOS
+    $override
+    void onPlaytest(CCObject* sender) {
+        auto playbackMode = m_editorLayer->m_playbackMode;
+        EditorUI::onPlaytest(sender);
+        if (!m_isPaused && playbackMode != PlaybackMode::Playing) {
+            if (auto viewBtnBar = this->getChildByID("view-tab"_spr)) {
+                this->updateModeSprites();
+                viewBtnBar->setVisible(m_selectedMode == 4);
+            }
+        }
+    }
+    #endif
+
     $override
     void selectObject(GameObject* obj, bool filter) {
         if (!static_cast<GameObjectExtra*>(obj)->shouldHide()) {
@@ -382,15 +365,14 @@ class $modify(DrawGridLayer) {
     }
 };
 
-class $modify(EditorPauseLayer) {
-    $override
-    void onResume(CCObject* pSender) {
-        EditorPauseLayer::onResume(pSender);
-        static_cast<ViewTabUI*>(EditorUI::get())->updateViewTab();
+class $modify(LevelEditorLayer) {
+    void updateOptions() {
+        LevelEditorLayer::updateOptions();
+        if (m_editorUI) static_cast<ViewTabUI*>(m_editorUI)->updateViewTab();
     }
 };
 
-#ifdef GEODE_IS_WINDOWS
+#ifdef GEODE_IS_DESKTOP
 $execute {
     BindManager::get()->registerBindable(BindableAction(
         "view-mode"_spr,
