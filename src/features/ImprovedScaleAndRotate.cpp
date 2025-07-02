@@ -317,7 +317,20 @@ class $modify(SnappableScaleControl, GJScaleControl) {
         labelLockSpr(m_scaleLockButton->getNormalImage(), "Pos");
     }
 
-    void onSnapLock(CCObject* sender){
+    void onSnapLock(CCObject* sender) {
+        if (
+            Loader::get()->getLoadedMod("thesillydoggo.qolmod") &&
+            !Mod::get()->setSavedValue("shown-qolmod-scale-incompat", true)
+        ) {
+            FLAlertLayer::create(
+                "Notice",
+                "If the scale control is glitching (snapping isn't working or "
+                "the number isn't being rounded), <co>disable QOLMod</c>. It is "
+                "recommended to install <cj>Eclipse</c> as an alternative free "
+                "mod menu, which is compatible with BetterEdit.",
+                "OK"
+            )->show();
+        }
         this->getSnapSizeBtn()->setEnabled(!static_cast<CCMenuItemToggler*>(sender)->m_toggled);
     }
 

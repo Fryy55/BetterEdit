@@ -1,5 +1,10 @@
 # BetterEdit 6
 
+## v6.10.0-alpha.10
+ * <cy>iOS support!</c> Huge thank you to [Jasmine](https://github.com/hiimjasmine00) for this
+ * MacOS crash fixes (thanks to Jasmine again)
+ * Add warning about <co>QOLMod incompatibility</c>; <cr>future versions of BetterEdit will likely be marked fully incompatible with QOLMod</c>. It is recommended to install <cj>Eclipse</c> as a free alternative mod menu
+
 ## v6.10.0-alpha.9
  * <cg>MacOS support!</c>
  * Add option to disable shift/control keys in <co>Scale</c> and <cj>Rotate</c> controls
