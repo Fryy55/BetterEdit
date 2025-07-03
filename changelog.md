@@ -1,9 +1,12 @@
 # BetterEdit 6
 
+## v6.10.0-alpha.11
+ * Update some text popups
+
 ## v6.10.0-alpha.10
  * <cy>iOS support!</c> Huge thank you to [Jasmine](https://github.com/hiimjasmine00) for this
  * MacOS crash fixes (thanks to Jasmine again)
- * Add warning about <co>QOLMod incompatibility</c>; <cr>future versions of BetterEdit will likely be marked fully incompatible with QOLMod</c>. It is recommended to install <cj>Eclipse</c> as a free alternative mod menu
+ * Add warning about <co>QOLMod incompatibility</c> in scaling
 
 ## v6.10.0-alpha.9
  * <cg>MacOS support!</c>

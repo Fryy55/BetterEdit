@@ -325,9 +325,7 @@ class $modify(SnappableScaleControl, GJScaleControl) {
             FLAlertLayer::create(
                 "Notice",
                 "If the scale control is glitching (snapping isn't working or "
-                "the number isn't being rounded), <co>disable QOLMod</c>. It is "
-                "recommended to install <cj>Eclipse</c> as an alternative free "
-                "mod menu, which is compatible with BetterEdit.",
+                "the number isn't being rounded), <co>disable QOLMod</c>.",
                 "OK"
             )->show();
         }
