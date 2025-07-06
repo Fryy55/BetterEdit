@@ -223,6 +223,7 @@ struct $modify(ViewTabUI, EditorUI) {
         }));
         btns->addObject(this->createViewToggleGV("v-grid.png"_spr, "0038"));
         btns->addObject(this->createViewToggleMSV("v-dash-lines.png"_spr, "show-dash-lines"));
+        btns->addObject(this->createViewToggleGV("v-hitboxes.png"_spr, "0045"));
 
         auto ttt = this->createViewToggleMSV(
             "v-indicators-trigger-to-trigger.png"_spr,

@@ -15,7 +15,11 @@ using namespace geode::prelude;
 
 class $modify(EditorUI) {
     $override
-    virtual void scrollWheel(float y, float) {
+    virtual void scrollWheel(float y, float x) {
+        if (!Mod::get()->getSettingValue<bool>("enable-fixed-mouse-controls")) {
+            return EditorUI::scrollWheel(y, x);
+        }
+        
         // Disable scrolling during playtest
         if (m_editorLayer->m_playbackMode == PlaybackMode::Playing) {
             return;

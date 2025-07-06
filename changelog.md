@@ -1,5 +1,10 @@
 # BetterEdit 6
 
+## v6.10.0-alpha.12
+ * Add option to disable <ca>New Mouse Controls</c> (for Mac users who want to use their trackpad)
+ * Add <cg>Show Hitboxes</c> to <cc>View Tab</c>
+ * Reorganize mod settings
+
 ## v6.10.0-alpha.11
  * Update some text popups
 

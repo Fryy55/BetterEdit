@@ -1,6 +1,6 @@
 {
 	"geode": "4.6.2",
-	"version": "6.10.0-alpha.11",
+	"version": "6.10.0-alpha.12",
 	"gd": {
 		"win": "2.2074",
 		"mac": "2.2074",
@@ -70,6 +70,10 @@
 		]
 	},
 	"settings": {
+		"level-section": {
+			"type": "title",
+			"name": "Level Settings"
+		},
 		"auto-save-rate": {
 			"type": "string",
 			"default": "Every 10 Minutes",
@@ -83,12 +87,33 @@
 			"name": "Quick Save",
 			"description": "Makes level saving faster by saving to a backup file rather than directly to the save file"
 		},
+		"copy-paste-from-clipboard": {
+			"type": "bool",
+			"default": true,
+			"name": "Copy & Paste to Clipboard",
+			"description": "Copy & paste objects to/from system clipboard. This means that when you copy objects, you can paste it in a text editor in its text representation, and also paste it in to the editor later"
+		},
+		"controls-section": {
+			"type": "title",
+			"name": "Mouse & Keybind Settings"
+		},
+		"enable-fixed-mouse-controls": {
+			"type": "bool",
+			"default": {
+				"win": true,
+				"mac": false
+			},
+			"name": "Improved Mouse Controls",
+			"description": "When enabled, you can scroll horizontally with Shift + Scroll Wheel & zoom with Control + Scroll Wheel",
+			"platforms": ["desktop"]
+		},
 		"mouse-move-on-zoom": {
 			"type": "bool",
 			"default": true,
 			"name": "Zoom Towards Cursor",
-			"description": "When enabled and while holding down the CTRL key, zooming in the editor with the scroll wheel will be zoomed toward the cursor and not the center of the screen",
-			"platforms": ["desktop"]
+			"description": "When enabled and while holding down the Control Key, zooming in the editor with the scroll wheel will be zoomed toward the cursor and not the center of the screen",
+			"platforms": ["desktop"],
+			"enable-if": "enable-fixed-mouse-controls"
 		},
 		"pinch-to-zoom": {
 			"type": "bool",
@@ -97,11 +122,15 @@
 			"description": "When enabled, you can use two fingers to zoom",
 			"platforms": ["android"]
 		},
-		"show-zoom-text": {
+		"scale-rotate-input-modifier-keys": {
 			"type": "bool",
 			"default": true,
-			"name": "Show Zoom Text",
-			"description": "When enabled, flashes the current zoom level as text when you zoom in / out in the editor"
+			"name": "Enable Shift/Control on Scale Input",
+			"description": "When holding the <cp>Shift</c> key, toggles snapping in the <co>Scale</c> and <cj>Rotate</c> controls, and when holding <cp>Control</c> toggles absolute position"
+		},
+		"ui-section": {
+			"type": "title",
+			"name": "UI Settings"
 		},
 		"scale-factor": {
 			"type": "float",
@@ -127,51 +156,17 @@
 			"name": "Scale Build Tabs",
 			"description": "Whether the tabs above the object selection area should be scaled according to the scale factor aswell"
 		},
-		"better-font-select": {
-			"type": "bool",
-			"default": true,
-			"name": "New Font Selection Menu",
-			"description": "Replaces the old font select screen with a better one with scrolling"
-		},
-		"new-edit-menu": {
-			"type": "bool",
-			"default": true,
-			"name": "New Edit Menu",
-			"description": "Changes the object moving menu to have the move button grouped directionally rather than in a list. <cr>Requires re-entering the editor!</c>"
-		},
-		"view-menu": {
-			"type": "bool",
-			"default": true,
-			"name": "Show View Tab",
-			"description": "Adds a new fourth tab to the editor with buttons from quickly toggling on/off the visibility of features"
-		},
-		"new-color-menu": {
-			"type": "bool",
-			"default": true,
-			"name": "New Color Menu",
-			"description": "Changes the object color selection menu to show more channels aswell as previews for colors and special colors"
-		},
-		"scale-rotate-input-modifier-keys": {
-			"type": "bool",
-			"default": true,
-			"name": "Enable Shift/Control on Scale Input",
-			"description": "When holding the <cp>Shift</c> key, toggles snapping in the <co>Scale</c> and <cj>Rotate</c> controls, and when holding <cp>Control</c> toggles absolute position"
-		},
-		"larger-color-menu": {
-			"type": "bool",
-			"default": {
-				"win": false,
-				"mac": false,
-				"android": true
-			},
-			"name": "Larger Color Menu",
-			"description": "If you're using the <cr>New Color Menu</c>, this makes the color channel buttons a bit larger"
-		},
 		"hide-trigger-ui": {
 			"type": "bool",
 			"default": false,
 			"name": "Hide Trigger Backgrounds",
 			"description": "Hides the <cc>backgrounds</c> on all triggers when using sliders, like with <cl>shader</c> triggers"
+		},
+		"show-zoom-text": {
+			"type": "bool",
+			"default": true,
+			"name": "Show Zoom Text",
+			"description": "When enabled, flashes the current zoom level as text when you zoom in / out in the editor"
 		},
 		"grid-size-controls": {
 			"type": "bool",
@@ -185,13 +180,47 @@
 			"default": true,
 			"name": "Show Grid on Size Change",
 			"description": "If the grid is currently hidden and you use the controls to change its size, its toggled on",
-			"platforms": ["win", "android64"]
+			"platforms": ["win", "android64"],
+			"enable-if": "grid-size-controls"
 		},
-		"copy-paste-from-clipboard": {
+		"redesigned-uis-section": {
+			"type": "title",
+			"name": "Redesigned/improved UIs"
+		},
+		"view-menu": {
 			"type": "bool",
 			"default": true,
-			"name": "Copy & Paste to Clipboard",
-			"description": "Copy & paste objects to/from system clipboard. This means that when you copy objects, you can paste it in a text editor in its text representation, and also paste it in to the editor later"
+			"name": "Show View Tab",
+			"description": "Adds a new fourth tab to the editor with buttons from quickly toggling on/off the visibility of features"
+		},
+		"better-font-select": {
+			"type": "bool",
+			"default": true,
+			"name": "New Font Selection Menu",
+			"description": "Replaces the old font select screen with a better one with scrolling"
+		},
+		"new-edit-menu": {
+			"type": "bool",
+			"default": true,
+			"name": "New Edit Menu",
+			"description": "Changes the object moving menu to have the move button grouped directionally rather than in a list. <cr>Requires re-entering the editor!</c>"
+		},
+		"new-color-menu": {
+			"type": "bool",
+			"default": true,
+			"name": "New Color Menu",
+			"description": "Changes the object color selection menu to show more channels aswell as previews for colors and special colors"
+		},
+		"larger-color-menu": {
+			"type": "bool",
+			"default": {
+				"win": false,
+				"mac": false,
+				"android": true
+			},
+			"name": "Larger Color Menu",
+			"description": "If you're using the <cr>New Color Menu</c>, this makes the color channel buttons a bit larger",
+			"enable-if": "new-color-menu"
 		},
 		"pro-section": {
 			"type": "title",
