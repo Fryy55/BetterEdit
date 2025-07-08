@@ -1,5 +1,9 @@
 # BetterEdit 6
 
+## v6.10.0-beta.1
+ * Add <cj>Next Free Offset</c> to color selection page
+ * Fix visuals glitches with color selection page
+
 ## v6.10.0-alpha.12
  * Add option to disable <ca>New Mouse Controls</c> (for Mac users who want to use their trackpad)
  * Add <cg>Show Hitboxes</c> to <cc>View Tab</c>

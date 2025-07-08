@@ -16,10 +16,11 @@
 #include <Geode/utils/cocos.hpp>
 #include <Geode/utils/ranges.hpp>
 #include <utils/Warn.hpp>
+#include <utils/NextFreeOffsetInput.hpp>
 
 using namespace geode::prelude;
 
-std::string shortTextForColorIdx(int channel) {
+static std::string shortTextForColorIdx(int channel) {
     switch (channel) {
         case 0: return "D";
         case 1000: return "BG";
@@ -41,7 +42,7 @@ std::string shortTextForColorIdx(int channel) {
     }
 }
 
-std::string longTextForColorIdx(int channel) {
+static std::string longTextForColorIdx(int channel) {
     if (0 < channel && channel < 1000) {
         return std::to_string(channel);
     }
@@ -63,6 +64,22 @@ static constexpr std::array SPECIAL_CHANNEL_ORDER_LARGE {
     1000, 1001, 1013, 1010,
     1007, 1009, 1014, 1011,
     1004, 1002, 1003,
+};
+
+struct NextFreeColorIDSource final {
+    using ValueType = int;
+
+    static constexpr int MIN_VALUE = 1;
+    static constexpr int MAX_VALUE = 999;
+
+    static void getUsedIDs(GameObject* obj, std::unordered_set<int>& used) {
+        if (obj->m_detailColor) {
+            used.insert(obj->m_detailColor->m_colorID);
+        }
+        if (obj->m_baseColor) {
+            used.insert(obj->m_baseColor->m_colorID);
+        }
+    }
 };
 
 class $modify(NewColorSelect, CustomizeObjectLayer) {
@@ -107,6 +124,11 @@ class $modify(NewColorSelect, CustomizeObjectLayer) {
 
     void updateSprite(ColorChannelSprite* sprite) {
         auto channel = static_cast<int>(reinterpret_cast<intptr_t>(sprite->getUserData()));
+
+        // Empty recent color slots have ID -1 and shouldn't be updated
+        if (channel == -1) {
+            return;
+        }
         auto action = LevelEditorLayer::get()->m_levelSettings->m_effectManager->getColorAction(channel);
 
         sprite->updateValues(action);
@@ -144,6 +166,7 @@ class $modify(NewColorSelect, CustomizeObjectLayer) {
         if (recent && channel == 0) {
             spr->setOpacity(105);
             spr->setColor({ 20, 20, 20 });
+            spr->setUserData(reinterpret_cast<void*>(static_cast<intptr_t>(-1)));
         }
         else {
             auto selection = CCSprite::createWithSpriteFrameName("GJ_select_001.png");
@@ -631,6 +654,13 @@ class $modify(NewColorSelect, CustomizeObjectLayer) {
         );
         m_mainLayer->addChild(recentTitle);
         m_colorTabNodes->addObject(recentTitle);
+        
+        if (auto nextFreeMenu = m_mainLayer->getChildByID("next-free-menu")) {
+            auto nextFreeOffset = NextFreeOffsetInput<NextFreeColorIDSource>::create();
+            nextFreeOffset->setID("next-free-offset-input"_spr);
+            nextFreeMenu->addChild(nextFreeOffset);
+            nextFreeMenu->updateLayout();
+        }
 
         m_fields->initDone = true;
 
@@ -638,5 +668,22 @@ class $modify(NewColorSelect, CustomizeObjectLayer) {
         this->updateCustomColorLabels();
 
         return true;
+    }
+
+    $override
+    void onNextColorChannel(CCObject* sender) {
+        if (0) CustomizeObjectLayer::onNextColorChannel(sender);
+        
+        // This is copied straight off of `onUpdateCustomColor`
+        m_customColorSelected = true;
+        m_customColorChannel = NextFreeOffsetInput<NextFreeColorIDSource>::getNextFreeID();
+        this->updateCustomColorLabels();
+        this->updateSelected(m_customColorChannel);
+        m_customColorSelected = false;
+        this->updateColorSprite();
+        this->updateChannelLabel(m_customColorChannel);
+        this->highlightSelected(nullptr);
+        this->gotoPageWithChannel(m_customColorChannel);
+        m_fields->modified = true;
     }
 };
