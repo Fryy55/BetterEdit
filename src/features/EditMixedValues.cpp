@@ -42,7 +42,8 @@ struct MixedValuesConfig final {
     Type (*getDefault)(GameObject*);
     Type (*get)(GameObject*);
     Type (*set)(GameObject*, Type, Direction);
-    void (*useNextFreeValues)(GameObject*, std::set<T>&) = nullptr;
+    void (SetGroupIDLayer::*nextFreeFunction)(CCObject*) = nullptr;
+    CCPoint nextFreeBtnOffset = ccp(0, 0);
 };
 
 template <class T>
@@ -114,7 +115,7 @@ protected:
         m_arrowRightBtn->setID("arrow-right-button"_spr);
         this->addChildAtPosition(m_arrowRightBtn, Anchor::Right, ccp(-15, -10));
 
-        if (m_config.useNextFreeValues) {
+        if (m_config.nextFreeFunction) {
             auto nextFreeSpr = CCSprite::createWithSpriteFrameName("GJ_plus2Btn_001.png");
             nextFreeSpr->setScale(.8f);
             m_nextFreeBtn = CCMenuItemSpriteExtra::create(
@@ -122,7 +123,7 @@ protected:
             );
             m_nextFreeBtn->setTag(1);
             m_nextFreeBtn->setID("next-free-button"_spr);
-            this->addChildAtPosition(m_nextFreeBtn, Anchor::TopRight, ccp(-6, -10));
+            this->addChildAtPosition(m_nextFreeBtn, Anchor::TopRight, ccp(-6, -10) + m_config.nextFreeBtnOffset);
         }
         
         auto unmixSpr = ButtonSprite::create("Unmix", "goldFont.fnt", "GJ_button_05.png", .8f);
@@ -151,18 +152,9 @@ protected:
         }
         this->updateLabel();
     }
-    void onNextFree(CCObject*) {
-        std::set<T> usedLayers;
-        for (auto obj : CCArrayExt<GameObject*>(LevelEditorLayer::get()->m_objects)) {
-            m_config.useNextFreeValues(obj, usedLayers);
-        }
-        T nextFree;
-        for (nextFree = m_config.limits.min; nextFree < m_config.limits.max; nextFree += 1) {
-            if (!usedLayers.contains(nextFree)) {
-                break;
-            }
-        }
-        this->override(nextFree);
+    void onNextFree(CCObject* sender) {
+        // this exists trust
+        (static_cast<SetGroupIDLayer*>(CCDirector::get()->getRunningScene()->getChildByID("SetGroupIDLayer"))->*m_config.nextFreeFunction)(sender);
     }
 
     bool isMixed() const {
@@ -285,10 +277,7 @@ class $modify(SetGroupIDLayer) {
                     obj->m_editorLayer = value;
                     return value;
                 },
-                .useNextFreeValues = +[](GameObject* obj, std::set<short>& values) {
-                    values.insert(obj->m_editorLayer);
-                    values.insert(obj->m_editorLayer2);
-                },
+                .nextFreeFunction = &SetGroupIDLayer::onNextFreeEditorLayer1,
             },
             "Editor L", "GJ_arrow_02_001.png"
         )->replace(m_editorLayerInput, m_mainLayer->querySelector("editor-layer-menu"));
@@ -306,10 +295,7 @@ class $modify(SetGroupIDLayer) {
                     obj->m_editorLayer2 = value;
                     return value;
                 },
-                .useNextFreeValues = +[](GameObject* obj, std::set<short>& values) {
-                    values.insert(obj->m_editorLayer);
-                    values.insert(obj->m_editorLayer2);
-                },
+                .nextFreeFunction = &SetGroupIDLayer::onNextFreeEditorLayer2,
             },
             "Editor L2", "GJ_arrow_03_001.png"
         )->replace(m_editorLayer2Input, m_mainLayer->querySelector("editor-layer-2-menu"));
@@ -382,7 +368,9 @@ class $modify(SetGroupIDLayer) {
                     .set = +[](GameObject* obj, int value, Direction) {
                         static_cast<EffectGameObject*>(obj)->m_channelValue = value;
                         return value;
-                    }
+                    },
+                    .nextFreeFunction = &SetGroupIDLayer::onNextFreeOrderChannel,
+                    .nextFreeBtnOffset = ccp(-128, -30)
                 },
                 nullptr, "GJ_arrow_02_001.png"
             )->replace(m_channelInput, m_mainLayer->querySelector("channel-menu"));
