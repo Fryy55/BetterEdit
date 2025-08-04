@@ -42,6 +42,7 @@ struct MixedValuesConfig final {
     Type (*getDefault)(GameObject*);
     Type (*get)(GameObject*);
     Type (*set)(GameObject*, Type, Direction);
+    char const* m_placeholderInputText = nullptr;
     void (SetGroupIDLayer::*nextFreeFunction)(CCObject*) = nullptr;
     CCPoint nextFreeBtnOffset = ccp(0, 0);
 };
@@ -89,7 +90,7 @@ protected:
             this->addChildAtPosition(m_title, Anchor::Top, ccp(0, -10));
         }
 
-        m_input = TextInput::create(50, "Num");
+        m_input = TextInput::create(50, m_config.m_placeholderInputText ? m_config.m_placeholderInputText : "Num");
         m_input->setCallback([this](std::string const& text) {
             this->override(numFromString<T>(text).unwrapOr(0), false);
         });
@@ -255,6 +256,10 @@ public:
             m_unmixBtn->setVisible(false);
             m_input->setString(fmt::format("{}", m_config.get(m_targets.front())));
         }
+
+        // Show placeholder text if no value is set and custom placeholder exists
+        if (m_input->getString() == "0" && m_config.m_placeholderInputText)
+            m_input->setString("");
     }
 };
 
@@ -347,7 +352,8 @@ class $modify(SetGroupIDLayer) {
                     .set = +[](GameObject* obj, int value, Direction) {
                         static_cast<EffectGameObject*>(obj)->m_ordValue = value;
                         return value;
-                    }
+                    },
+                    .m_placeholderInputText = "ORD"
                 },
                 nullptr, "GJ_arrow_02_001.png"
             )->replace(m_orderInput, m_mainLayer->querySelector("channel-order-menu"));
@@ -369,6 +375,7 @@ class $modify(SetGroupIDLayer) {
                         static_cast<EffectGameObject*>(obj)->m_channelValue = value;
                         return value;
                     },
+                    .m_placeholderInputText = "CH",
                     .nextFreeFunction = &SetGroupIDLayer::onNextFreeOrderChannel,
                     .nextFreeBtnOffset = ccp(-128, -30)
                 },
