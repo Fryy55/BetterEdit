@@ -42,8 +42,8 @@ struct MixedValuesConfig final {
     Type (*getDefault)(GameObject*);
     Type (*get)(GameObject*);
     Type (*set)(GameObject*, Type, Direction);
-    char const* m_placeholderInputText = nullptr;
-    void (SetGroupIDLayer::*nextFreeFunction)(CCObject*) = nullptr;
+    char const* placeholderInputText = nullptr;
+    std::function<void(CCObject*)> nextFreeFunction{};
     CCPoint nextFreeBtnOffset = ccp(0, 0);
 };
 
@@ -90,7 +90,7 @@ protected:
             this->addChildAtPosition(m_title, Anchor::Top, ccp(0, -10));
         }
 
-        m_input = TextInput::create(50, m_config.m_placeholderInputText ? m_config.m_placeholderInputText : "Num");
+        m_input = TextInput::create(50, m_config.placeholderInputText ? m_config.placeholderInputText : "Num");
         m_input->setCallback([this](std::string const& text) {
             this->override(numFromString<T>(text).unwrapOr(0), false);
         });
@@ -154,8 +154,9 @@ protected:
         this->updateLabel();
     }
     void onNextFree(CCObject* sender) {
-        // this exists trust
-        (static_cast<SetGroupIDLayer*>(CCDirector::get()->getRunningScene()->getChildByID("SetGroupIDLayer"))->*m_config.nextFreeFunction)(sender);
+        // m_config.nextFreeFunction will never be an empty object because the
+        // button for the callback is only created if the function is present
+        m_config.nextFreeFunction(sender);
     }
 
     bool isMixed() const {
@@ -258,8 +259,9 @@ public:
         }
 
         // Show placeholder text if no value is set and custom placeholder exists
-        if (m_input->getString() == "0" && m_config.m_placeholderInputText)
+        if (m_input->getString() == "0" && m_config.placeholderInputText) {
             m_input->setString("");
+        }
     }
 };
 
@@ -282,7 +284,7 @@ class $modify(SetGroupIDLayer) {
                     obj->m_editorLayer = value;
                     return value;
                 },
-                .nextFreeFunction = &SetGroupIDLayer::onNextFreeEditorLayer1,
+                .nextFreeFunction = [this](CCObject* sender) { this->onNextFreeEditorLayer1(sender); }
             },
             "Editor L", "GJ_arrow_02_001.png"
         )->replace(m_editorLayerInput, m_mainLayer->querySelector("editor-layer-menu"));
@@ -300,7 +302,7 @@ class $modify(SetGroupIDLayer) {
                     obj->m_editorLayer2 = value;
                     return value;
                 },
-                .nextFreeFunction = &SetGroupIDLayer::onNextFreeEditorLayer2,
+                .nextFreeFunction = [this](CCObject* sender) { this->onNextFreeEditorLayer2(sender); }
             },
             "Editor L2", "GJ_arrow_03_001.png"
         )->replace(m_editorLayer2Input, m_mainLayer->querySelector("editor-layer-2-menu"));
@@ -353,7 +355,7 @@ class $modify(SetGroupIDLayer) {
                         static_cast<EffectGameObject*>(obj)->m_ordValue = value;
                         return value;
                     },
-                    .m_placeholderInputText = "ORD"
+                    .placeholderInputText = "ORD"
                 },
                 nullptr, "GJ_arrow_02_001.png"
             )->replace(m_orderInput, m_mainLayer->querySelector("channel-order-menu"));
@@ -375,8 +377,8 @@ class $modify(SetGroupIDLayer) {
                         static_cast<EffectGameObject*>(obj)->m_channelValue = value;
                         return value;
                     },
-                    .m_placeholderInputText = "CH",
-                    .nextFreeFunction = &SetGroupIDLayer::onNextFreeOrderChannel,
+                    .placeholderInputText = "CH",
+                    .nextFreeFunction = [this](CCObject* sender) { this->onNextFreeOrderChannel(sender); },
                     .nextFreeBtnOffset = ccp(-128, -30)
                 },
                 nullptr, "GJ_arrow_02_001.png"
